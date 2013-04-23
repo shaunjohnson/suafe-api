@@ -23,6 +23,21 @@ public final class Document {
     private Set<UserGroup> userGroups = new HashSet<UserGroup>();
 
     /**
+     * Adds a user to a user group.
+     *
+     * @param userName            Name of user to add to user group
+     * @param targetUserGroupName Name of user group to which the user is added
+     * @return true if the user was not already in the user group
+     * @throws EntityDoesNotExistException When user or user group with name does not exist
+     */
+    public boolean addUserToUserGroup(final String userName, final String targetUserGroupName) {
+        final User user = checkThatUserWithNameExists(this, userName);
+        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, targetUserGroupName);
+
+        return userGroup.addUser(user) && user.addUserGroupMemberOf(userGroup);
+    }
+
+    /**
      * Clones an existing repository with the provided name.
      *
      * @param repositoryName      Name of the repository to clone
@@ -48,21 +63,29 @@ public final class Document {
         final User existingUser = checkThatUserWithNameExists(this, userName);
         final User cloneUser = createUser(cloneUserName, cloneUserAlias);
 
+        for (final UserGroup userGroup : existingUser.getUserGroupsMemberOf()) {
+            addUserToUserGroup(cloneUserName, userGroup.getName());
+        }
+
         return cloneUser;
     }
 
     /**
      * Clones an existing user group with the provided name.
      *
-     * @param userGroupName       Name of the user group to clone
-     * @param cloneUserGroupName  New name of the user group clone
+     * @param userGroupName      Name of the user group to clone
+     * @param cloneUserGroupName New name of the user group clone
      * @return Clone user
      */
     public UserGroup cloneUserGroup(final String userGroupName, final String cloneUserGroupName) {
-        final UserGroup existingUser = checkThatUserGroupWithNameExists(this, userGroupName);
-        final UserGroup cloneUser = createUserGroup(cloneUserGroupName);
+        final UserGroup existingUserGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+        final UserGroup cloneUserGroup = createUserGroup(cloneUserGroupName);
 
-        return cloneUser;
+        for (final User user : existingUserGroup.getUsers()) {
+            addUserToUserGroup(user.getName(), cloneUserGroupName);
+        }
+
+        return cloneUserGroup;
     }
 
     /**
@@ -139,6 +162,8 @@ public final class Document {
     public void deleteUser(final String userName) {
         final User user = checkThatUserWithNameExists(this, userName);
 
+        // TODO remove user from its groups
+
         users.remove(user);
     }
 
@@ -150,6 +175,9 @@ public final class Document {
      */
     public void deleteUserGroup(final String userGroupName) {
         final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+
+        // TODO remove group from its users
+        // TODO remove group from its groups
 
         userGroups.remove(userGroup);
     }

@@ -4,6 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static net.lmxm.suafe.api.CustomMatchers.containsSameInstance;
 import static net.lmxm.suafe.api.CustomMatchers.emptySet;
 import static net.lmxm.suafe.api.CustomMatchers.immutableSet;
 import static org.hamcrest.CoreMatchers.*;
@@ -12,6 +13,24 @@ import static org.junit.Assert.assertThat;
 public final class DocumentTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void testAddUserToUserGroup() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", null);
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        assertThat(userGroup.getUsers(), is(emptySet()));
+        assertThat(user.getUserGroupsMemberOf(), is(emptySet()));
+
+        // Test
+        document.addUserToUserGroup(user.getName(), userGroup.getName());
+        assertThat(userGroup.getUsers(), is(not(emptySet())));
+        assertThat(userGroup.getUsers(), is(containsSameInstance(user)));
+        assertThat(user.getUserGroupsMemberOf(), is(not(emptySet())));
+        assertThat(user.getUserGroupsMemberOf(), is(containsSameInstance(userGroup)));
+    }
 
     @Test
     public void testCloneRepository() {
@@ -40,20 +59,41 @@ public final class DocumentTest {
         // Setup
         assertThat(document.findUserByName("userName"), is(nullValue()));
         assertThat(document.findUserByName("cloneUserName"), is(nullValue()));
-        document.createUser("userName", null);
+        document.createUser("userName", "userAlias");
         assertThat(document.findUserByName("userName"), is(notNullValue()));
-        assertThat(document.findUserByName("userName").getAlias(), is(nullValue()));
+        assertThat(document.findUserByName("userName").getAlias(), is(equalTo("userAlias")));
         assertThat(document.findUserByName("cloneUserName"), is(nullValue()));
 
         // Test
         document.cloneUser("userName", "cloneUserName", "cloneUserAlias");
         assertThat(document.findUserByName("userName"), is(notNullValue()));
-        assertThat(document.findUserByName("userName").getAlias(), is(nullValue()));
+        assertThat(document.findUserByName("userName").getAlias(), is(equalTo("userAlias")));
         assertThat(document.findUserByName("cloneUserName"), is(notNullValue()));
         assertThat(document.findUserByName("cloneUserName").getAlias(), is(equalTo("cloneUserAlias")));
 
         thrown.expect(EntityAlreadyExistsException.class);
         document.cloneUser("cloneUserName", "userName", null);
+    }
+
+    @Test
+    public void testCloneUser_MemberOfGroups() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", "userAlias");
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        document.addUserToUserGroup("userName", "userGroupName");
+        assertThat(userGroup.getUsers(), is(not(emptySet())));
+        assertThat(userGroup.getUsers().iterator().next(), is(sameInstance(user)));
+        assertThat(user.getUserGroupsMemberOf(), is(not(emptySet())));
+        assertThat(user.getUserGroupsMemberOf().iterator().next(), is(sameInstance(userGroup)));
+
+        // Test
+        final User cloneUser = document.cloneUser("userName", "cloneUserName", "cloneUserAlias");
+        assertThat(userGroup.getUsers(), is(not(emptySet())));
+        assertThat(userGroup.getUsers(), is(containsSameInstance(cloneUser)));
+        assertThat(cloneUser.getUserGroupsMemberOf(), is(not(emptySet())));
+        assertThat(cloneUser.getUserGroupsMemberOf(), is(containsSameInstance(userGroup)));
     }
 
     @Test
@@ -74,6 +114,27 @@ public final class DocumentTest {
 
         thrown.expect(EntityAlreadyExistsException.class);
         document.cloneUserGroup("cloneUserGroupName", "userGroupName");
+    }
+
+    @Test
+    public void testCloneUserGroup_Users() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", "userAlias");
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        document.addUserToUserGroup("userName", "userGroupName");
+        assertThat(userGroup.getUsers(), is(not(emptySet())));
+        assertThat(userGroup.getUsers().iterator().next(), is(sameInstance(user)));
+        assertThat(user.getUserGroupsMemberOf(), is(not(emptySet())));
+        assertThat(user.getUserGroupsMemberOf().iterator().next(), is(sameInstance(userGroup)));
+
+        // Test
+        final UserGroup cloneUserGroup = document.cloneUserGroup("userGroupName", "cloneUserGroupName");
+        assertThat(cloneUserGroup.getUsers(), is(not(emptySet())));
+        assertThat(cloneUserGroup.getUsers(), is(containsSameInstance(user)));
+        assertThat(user.getUserGroupsMemberOf(), is(not(emptySet())));
+        assertThat(user.getUserGroupsMemberOf(), is(containsSameInstance(cloneUserGroup)));
     }
 
     @Test
