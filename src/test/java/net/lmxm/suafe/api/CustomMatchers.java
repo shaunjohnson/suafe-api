@@ -14,6 +14,32 @@ import java.util.Set;
  */
 public final class CustomMatchers {
     /**
+     * Matcher that ensures a set contains an object.
+     *
+     * @return Empty set matcher
+     */
+    public static <T> Matcher<Set<T>> containsSameInstance(final T target) {
+        return new BaseMatcher<Set<T>>() {
+            @Override
+            @SuppressWarnings(value = "unchecked")
+            public boolean matches(final Object item) {
+                for (final T t : ((Set<T>)item)) {
+                    if (t == target) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("not contains same instance");
+            }
+        };
+    }
+
+    /**
      * Matcher that ensures a set is empty.
      *
      * @return Empty set matcher
@@ -21,12 +47,12 @@ public final class CustomMatchers {
     public static Matcher<Set> emptySet() {
         return new BaseMatcher<Set>() {
             @Override
-            public boolean matches(Object item) {
+            public boolean matches(final Object item) {
                 return Set.class.isInstance(item) && ((Set) item).isEmpty();
             }
 
             @Override
-            public void describeTo(Description description) {
+            public void describeTo(final Description description) {
                 description.appendText("not empty set");
             }
         };
@@ -41,7 +67,7 @@ public final class CustomMatchers {
         return new BaseMatcher<Set>() {
             @Override
             @SuppressWarnings(value = "unchecked")
-            public boolean matches(Object item) {
+            public boolean matches(final Object item) {
                 if (!Set.class.isInstance(item)) {
                     return false;
                 }
@@ -100,7 +126,7 @@ public final class CustomMatchers {
             }
 
             @Override
-            public void describeTo(Description description) {
+            public void describeTo(final Description description) {
                 description.appendText("not throwing UnsupportedOperationException when set is modified");
             }
         };
@@ -114,7 +140,7 @@ public final class CustomMatchers {
     public static Matcher<Class> protectedConstructor() {
         return new BaseMatcher<Class>() {
             @Override
-            public boolean matches(Object item) {
+            public boolean matches(final Object item) {
                 if (!Class.class.isInstance(item)) {
                     return false;
                 }
@@ -129,7 +155,7 @@ public final class CustomMatchers {
             }
 
             @Override
-            public void describeTo(Description description) {
+            public void describeTo(final Description description) {
                 description.appendText("not a protected constructor");
             }
         };
@@ -144,7 +170,7 @@ public final class CustomMatchers {
     public static Matcher<Class> protectedMethod(final String methodName) {
         return new BaseMatcher<Class>() {
             @Override
-            public boolean matches(Object item) {
+            public boolean matches(final Object item) {
                 if (!Class.class.isInstance(item)) {
                     return false;
                 }

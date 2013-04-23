@@ -38,6 +38,19 @@ public final class CustomMatchersTest {
     }
 
     @Test
+    public void testContainsSameInstance() {
+        // Setup
+        final String target = "target";
+        final Set<String> set = new HashSet<String>();
+        assertThat(set, is(not(containsSameInstance(target))));
+
+        // Test
+        set.add(target);
+        assertThat(set, is(containsSameInstance(target)));
+        assertThat(set, is(not(containsSameInstance("not the target"))));
+    }
+
+    @Test
     public void testEmptySet() {
         final Set<String> set = new HashSet<String>();
         assertThat(set, is(emptySet()));
