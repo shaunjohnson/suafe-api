@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static net.lmxm.suafe.api.CustomMatchers.emptySet;
+import static net.lmxm.suafe.api.CustomMatchers.immutableSet;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -208,6 +209,8 @@ public final class DocumentTest {
 
         assertThat(document.getRepositories(), is(notNullValue()));
         assertThat(document.getRepositories(), is(not(emptySet())));
+
+        assertThat(document.getRepositories(), is(immutableSet()));
     }
 
     @Test
@@ -221,6 +224,8 @@ public final class DocumentTest {
 
         assertThat(document.getUsers(), is(notNullValue()));
         assertThat(document.getUsers(), is(not(emptySet())));
+
+        assertThat(document.getUsers(), is(immutableSet()));
     }
 
     @Test
@@ -234,6 +239,8 @@ public final class DocumentTest {
 
         assertThat(document.getUserGroups(), is(notNullValue()));
         assertThat(document.getUserGroups(), is(not(emptySet())));
+
+        assertThat(document.getUserGroups(), is(immutableSet()));
     }
 
     @Test
