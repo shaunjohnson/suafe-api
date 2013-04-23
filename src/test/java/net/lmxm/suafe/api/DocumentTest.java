@@ -54,6 +54,25 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testCloneUserGroup() {
+        final Document document = new Document();
+
+        assertThat(document.findUserGroupByName("userGroupName"), is(nullValue()));
+        assertThat(document.findUserGroupByName("cloneUserGroupName"), is(nullValue()));
+
+        document.createUserGroup("userGroupName");
+        assertThat(document.findUserGroupByName("userGroupName"), is(notNullValue()));
+        assertThat(document.findUserGroupByName("cloneUserGroupName"), is(nullValue()));
+
+        document.cloneUserGroup("userGroupName", "cloneUserGroupName");
+        assertThat(document.findUserGroupByName("userGroupName"), is(notNullValue()));
+        assertThat(document.findUserGroupByName("cloneUserGroupName"), is(notNullValue()));
+
+        thrown.expect(EntityAlreadyExistsException.class);
+        document.cloneUserGroup("cloneUserGroupName", "userGroupName");
+    }
+
+    @Test
     public void testCreateRepository() {
         final Document document = new Document();
 
@@ -119,6 +138,22 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testDeleteUserGroup() {
+        final Document document = new Document();
+
+        assertThat(document.findUserGroupByName("userGroupName"), is(nullValue()));
+
+        document.createUserGroup("userGroupName");
+        assertThat(document.findUserGroupByName("userGroupName"), is(notNullValue()));
+
+        document.deleteUserGroup("userGroupName");
+        assertThat(document.findUserGroupByName("userGroupName"), is(nullValue()));
+
+        thrown.expect(EntityDoesNotExistException.class);
+        document.deleteUserGroup("userGroupName");
+    }
+
+    @Test
     public void testFindRepositoryByName() {
         final Document document = new Document();
 
@@ -152,6 +187,17 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testFindUserGroupByName() {
+        final Document document = new Document();
+
+        assertThat(document.findUserGroupByName("userGroupName"), is(nullValue()));
+
+        document.createUserGroup("userGroupName");
+        assertThat(document.findUserGroupByName("userGroupName"), is(notNullValue()));
+        assertThat(document.findUserGroupByName("userGroupName").getName(), is(equalTo("userGroupName")));
+    }
+
+    @Test
     public void testGetRepositories() {
         final Document document = new Document();
 
@@ -175,6 +221,19 @@ public final class DocumentTest {
 
         assertThat(document.getUsers(), is(notNullValue()));
         assertThat(document.getUsers(), is(not(emptySet())));
+    }
+
+    @Test
+    public void testGetUserGroups() {
+        final Document document = new Document();
+
+        assertThat(document.getUserGroups(), is(notNullValue()));
+        assertThat(document.getUserGroups(), is(emptySet()));
+
+        document.createUserGroup("userGroupName");
+
+        assertThat(document.getUserGroups(), is(notNullValue()));
+        assertThat(document.getUserGroups(), is(not(emptySet())));
     }
 
     @Test
@@ -229,5 +288,23 @@ public final class DocumentTest {
         assertThat(document.findUserByName("newUserName"), is(notNullValue()));
         assertThat(document.findUserByName("newUserName").getName(), is(equalTo("newUserName")));
         assertThat(document.findUserByName("userName"), is(nullValue()));
+    }
+
+    @Test
+    public void testRenameUserGroup() {
+        final Document document = new Document();
+
+        assertThat(document.findUserGroupByName("userGroupName"), is(nullValue()));
+        assertThat(document.findUserGroupByName("newUserGroupName"), is(nullValue()));
+
+        document.createUserGroup("userGroupName");
+        assertThat(document.findUserGroupByName("userGroupName"), is(notNullValue()));
+        assertThat(document.findUserGroupByName("userGroupName").getName(), is(equalTo("userGroupName")));
+        assertThat(document.findUserGroupByName("newUserGroupName"), is(nullValue()));
+
+        document.renameUserGroup("userGroupName", "newUserGroupName");
+        assertThat(document.findUserGroupByName("newUserGroupName"), is(notNullValue()));
+        assertThat(document.findUserGroupByName("newUserGroupName").getName(), is(equalTo("newUserGroupName")));
+        assertThat(document.findUserGroupByName("userGroupName"), is(nullValue()));
     }
 }

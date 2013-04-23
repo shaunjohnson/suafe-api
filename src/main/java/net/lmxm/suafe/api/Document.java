@@ -18,6 +18,11 @@ public final class Document {
     private Set<User> users = new HashSet<User>();
 
     /**
+     * Set of all user groups.
+     */
+    private Set<UserGroup> userGroups = new HashSet<UserGroup>();
+
+    /**
      * Clones an existing repository with the provided name.
      *
      * @param repositoryName      Name of the repository to clone
@@ -42,6 +47,20 @@ public final class Document {
     public User cloneUser(final String userName, final String cloneUserName, final String cloneUserAlias) {
         final User existingUser = checkThatUserWithNameExists(this, userName);
         final User cloneUser = createUser(cloneUserName, cloneUserAlias);
+
+        return cloneUser;
+    }
+
+    /**
+     * Clones an existing user group with the provided name.
+     *
+     * @param userGroupName       Name of the user group to clone
+     * @param cloneUserGroupName  New name of the user group clone
+     * @return Clone user
+     */
+    public UserGroup cloneUserGroup(final String userGroupName, final String cloneUserGroupName) {
+        final UserGroup existingUser = checkThatUserGroupWithNameExists(this, userGroupName);
+        final UserGroup cloneUser = createUserGroup(cloneUserGroupName);
 
         return cloneUser;
     }
@@ -84,6 +103,22 @@ public final class Document {
     }
 
     /**
+     * Creates a new user group with the provided name.
+     *
+     * @param userGroupName Name of the user group to create
+     * @return Newly created user group
+     * @throws EntityAlreadyExistsException When user group with the name already exists
+     */
+    public UserGroup createUserGroup(final String userGroupName) {
+        checkThatUserGroupWithNameDoesNotExist(this, userGroupName);
+
+        final UserGroup userGroup = new UserGroup(userGroupName);
+        userGroups.add(userGroup);
+
+        return userGroup;
+    }
+
+    /**
      * Deletes an existing repository with the provided name.
      *
      * @param repositoryName Name of the repository to delete
@@ -105,6 +140,18 @@ public final class Document {
         final User user = checkThatUserWithNameExists(this, userName);
 
         users.remove(user);
+    }
+
+    /**
+     * Deletes an existing user group with the provided name.
+     *
+     * @param userGroupName Name of the user group to delete
+     * @throws EntityDoesNotExistException When user group to delete does not exist
+     */
+    public void deleteUserGroup(final String userGroupName) {
+        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+
+        userGroups.remove(userGroup);
     }
 
     /**
@@ -162,6 +209,24 @@ public final class Document {
     }
 
     /**
+     * Finds an existing user group by name.
+     *
+     * @param userGroupName Name of user group to find
+     * @return Matching user group or null if not found
+     */
+    public UserGroup findUserGroupByName(final String userGroupName) {
+        checkArgumentNotBlank(userGroupName, "User group name");
+
+        for (final UserGroup userGroup : userGroups) {
+            if (userGroup.getName().equals(userGroupName)) {
+                return userGroup;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Gets a copy of all repositories.
      *
      * @return Unmodifiable set of repositories
@@ -177,6 +242,15 @@ public final class Document {
      */
     public Set<User> getUsers() {
         return Collections.unmodifiableSet(users);
+    }
+
+    /**
+     * Gets a copy of all user groups.
+     *
+     * @return Unmodifiable set of user groups
+     */
+    public Set<UserGroup> getUserGroups() {
+        return Collections.unmodifiableSet(userGroups);
     }
 
     /**
@@ -232,5 +306,23 @@ public final class Document {
         }
 
         return user;
+    }
+
+    /**
+     * Renames an existing user group.
+     *
+     * @param userGroupName    Name of the user group to rename
+     * @param newUserGroupName New name of the user group
+     * @return Updated user group
+     * @throws EntityDoesNotExistException  When user group to rename does not exist
+     * @throws EntityAlreadyExistsException When user group with the new name already exists
+     */
+    public UserGroup renameUserGroup(final String userGroupName, final String newUserGroupName) {
+        checkThatRepositoryDoesNotExist(this, newUserGroupName);
+
+        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+        userGroup.setName(newUserGroupName);
+
+        return userGroup;
     }
 }

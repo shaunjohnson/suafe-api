@@ -1,7 +1,7 @@
 package net.lmxm.suafe.api;
 
 public final class UserGroup {
-    private final String name;
+    private String name;
 
     protected UserGroup(final String name) {
         this.name = name;
@@ -9,5 +9,9 @@ public final class UserGroup {
 
     public String getName() {
         return name;
+    }
+
+    protected void setName(final String name) {
+        this.name = name;
     }
 }

@@ -46,12 +46,25 @@ public final class DocumentPreconditions {
      * Checks that a user with this name does not exist.
      *
      * @param document Document to check
-     * @param userName Name of repository to check
+     * @param userName Name of user to check
      * @throws EntityAlreadyExistsException When user with name already exists
      */
     public static void checkThatUserWithNameDoesNotExist(final Document document, final String userName) {
         if (document.findUserByName(userName) != null) {
             throw new EntityAlreadyExistsException("User with name \"" + userName + "\" already exists");
+        }
+    }
+
+    /**
+     * Checks that a user group with this name does not exist.
+     *
+     * @param document      Document to check
+     * @param userGroupName Name of user group to check
+     * @throws EntityAlreadyExistsException When user group with name already exists
+     */
+    public static void checkThatUserGroupWithNameDoesNotExist(final Document document, final String userGroupName) {
+        if (document.findUserGroupByName(userGroupName) != null) {
+            throw new EntityAlreadyExistsException("User group with name \"" + userGroupName + "\" already exists");
         }
     }
 
@@ -75,7 +88,7 @@ public final class DocumentPreconditions {
     /**
      * Checks that a user with name exists.
      *
-     * @param document       Document to check
+     * @param document Document to check
      * @param userName Name of user to check
      * @return Matching user
      * @throws EntityDoesNotExistException When user with name does not exist
@@ -87,6 +100,23 @@ public final class DocumentPreconditions {
         }
 
         return user;
+    }
+
+    /**
+     * Checks that a user group with name exists.
+     *
+     * @param document      Document to check
+     * @param userGroupName Name of user group to check
+     * @return Matching user group
+     * @throws EntityDoesNotExistException When user group with name does not exist
+     */
+    public static UserGroup checkThatUserGroupWithNameExists(final Document document, final String userGroupName) {
+        final UserGroup userGroup = document.findUserGroupByName(userGroupName);
+        if (userGroup == null) {
+            throw new EntityDoesNotExistException("User group with name \"" + userGroupName + "\" does not exist");
+        }
+
+        return userGroup;
     }
 
     /**

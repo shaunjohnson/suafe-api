@@ -73,7 +73,7 @@ public final class DocumentPreconditionsTest {
     public void testCheckThatUserWithAliasDoesNotExist() {
         final Document document = new Document();
 
-        // Test adding first repository
+        // Test adding first user
         checkThatUserWithAliasDoesNotExist(document, "userAlias");
         document.createUser("userName", "userAlias");
 
@@ -88,7 +88,7 @@ public final class DocumentPreconditionsTest {
     public void testCheckThatUserWithNameDoesNotExist() {
         final Document document = new Document();
 
-        // Test adding first repository
+        // Test adding first user
         checkThatUserWithNameDoesNotExist(document, "userName");
         document.createUser("userName", null);
 
@@ -97,6 +97,21 @@ public final class DocumentPreconditionsTest {
         thrown.expectMessage(containsString("userName"));
         thrown.expectMessage(containsString("already exists"));
         checkThatUserWithNameDoesNotExist(document, "userName");
+    }
+
+    @Test
+    public void testCheckThatUserGroupWithNameDoesNotExist() {
+        final Document document = new Document();
+
+        // Test adding first user group
+        checkThatUserGroupWithNameDoesNotExist(document, "userGroupName");
+        document.createUserGroup("userGroupName");
+
+        // Test duplicate check
+        thrown.expect(EntityAlreadyExistsException.class);
+        thrown.expectMessage(containsString("userGroupName"));
+        thrown.expectMessage(containsString("already exists"));
+        checkThatUserGroupWithNameDoesNotExist(document, "userGroupName");
     }
 
     @Test
@@ -109,9 +124,24 @@ public final class DocumentPreconditionsTest {
         thrown.expectMessage(containsString("does not exist"));
         checkThatUserWithNameExists(document, "userName");
 
-        // Test after adding first repository
+        // Test after adding first user
         document.createUser("userName", null);
         checkThatUserWithNameExists(document, "userName");
+    }
+
+    @Test
+    public void testCheckThatUserGroupWithNameExists() {
+        final Document document = new Document();
+
+        // Test clean document check
+        thrown.expect(EntityDoesNotExistException.class);
+        thrown.expectMessage(containsString("userGroupName"));
+        thrown.expectMessage(containsString("does not exist"));
+        checkThatUserGroupWithNameExists(document, "userGroupName");
+
+        // Test after adding first user group
+        document.createUserGroup("userGroupName");
+        checkThatUserGroupWithNameExists(document, "userGroupName");
     }
 
     @Test
