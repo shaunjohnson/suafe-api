@@ -49,10 +49,20 @@ public final class UserGroup {
      * Adds a user to this user group.
      *
      * @param user User to add
-     * @return true of user is not already in the user group, otherwise false
+     * @return true if user is not already in the user group, otherwise false
      */
     protected boolean addUser(final User user) {
         return users.add(user);
+    }
+
+    /**
+     * Removes a user from this user group.
+     *
+     * @param user User to remove
+     * @return true if user is removed from the user group, otherwise false
+     */
+    protected boolean removeUser(final User user) {
+        return users.remove(user);
     }
 
     /**
