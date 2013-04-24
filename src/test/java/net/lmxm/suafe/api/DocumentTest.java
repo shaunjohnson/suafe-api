@@ -208,6 +208,22 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testDeleteUser_MemberOfGroups() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        final User user = document.createUser("userName", null);
+        document.addUserToUserGroup("userName", "userGroupName");
+        assertThat(userGroup.getUsers(), is(containsSameInstance(user)));
+        assertThat(user.getUserGroupsMemberOf(), is(containsSameInstance(userGroup)));
+
+        // Test
+        document.deleteUser("userName");
+        assertThat(userGroup.getUsers(), is(emptySet()));
+    }
+
+    @Test
     public void testDeleteUserGroup() {
         final Document document = new Document();
 
@@ -222,6 +238,22 @@ public final class DocumentTest {
 
         thrown.expect(EntityDoesNotExistException.class);
         document.deleteUserGroup("userGroupName");
+    }
+
+    @Test
+    public void testDeleteUserGroup_Users() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        final User user = document.createUser("userName", null);
+        document.addUserToUserGroup("userName", "userGroupName");
+        assertThat(userGroup.getUsers(), is(containsSameInstance(user)));
+        assertThat(user.getUserGroupsMemberOf(), is(containsSameInstance(userGroup)));
+
+        // Test
+        document.deleteUserGroup("userGroupName");
+        assertThat(user.getUserGroupsMemberOf(), is(emptySet()));
     }
 
     @Test

@@ -162,7 +162,9 @@ public final class Document {
     public void deleteUser(final String userName) {
         final User user = checkThatUserWithNameExists(this, userName);
 
-        // TODO remove user from its groups
+        for (final UserGroup userGroup : user.getUserGroupsMemberOf()) {
+            userGroup.removeUser(user);
+        }
 
         users.remove(user);
     }
@@ -176,7 +178,10 @@ public final class Document {
     public void deleteUserGroup(final String userGroupName) {
         final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
 
-        // TODO remove group from its users
+        for (final User user : userGroup.getUsers()) {
+            user.removeUserGroupMemberOf(userGroup);
+        }
+
         // TODO remove group from its groups
 
         userGroups.remove(userGroup);
