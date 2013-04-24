@@ -6,7 +6,9 @@ import static net.lmxm.suafe.api.CustomMatchers.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public final class UserTest {
     @Test
@@ -27,13 +29,16 @@ public final class UserTest {
     public void testAddUserGroupMemberOf() {
         assertThat(User.class, is(protectedMethod("addUserGroupMemberOf")));
 
-        final UserGroup userGroup = new UserGroup("userGroupName");
+        // Setup
         final User user = new User("userName", null);
+        final UserGroup userGroup = new UserGroup("userGroupName");
         assertThat(user.getUserGroupsMemberOf(), is(emptySet()));
 
-        userGroup.addUser(user);
-        assertThat(userGroup.getUsers(), is(not(emptySet())));
-        assertThat(userGroup.getUsers().iterator().next(), is(sameInstance(user)));
+        // Test
+        assertThat(user.addUserGroupMemberOf(userGroup), is(true));
+        assertThat(user.addUserGroupMemberOf(userGroup), is(false));
+        assertThat(user.getUserGroupsMemberOf(), is(not(emptySet())));
+        assertThat(user.getUserGroupsMemberOf(), is(containsSameInstance(userGroup)));
     }
 
     @Test
@@ -41,6 +46,24 @@ public final class UserTest {
         final User user = new User("userName", null);
         assertThat(user.getUserGroupsMemberOf(), is(immutableSet()));
         assertThat(user.getUserGroupsMemberOf(), is(notNullValue()));
+    }
+
+    @Test
+    public void testRemoveUserGroupMemberOf() {
+        assertThat(User.class, is(protectedMethod("addUserGroupMemberOf")));
+
+        // Setup
+        final User user = new User("userName", null);
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        assertThat(user.getUserGroupsMemberOf(), is(emptySet()));
+        assertThat(user.addUserGroupMemberOf(userGroup), is(true));
+        assertThat(user.getUserGroupsMemberOf(), is(not(emptySet())));
+        assertThat(user.getUserGroupsMemberOf(), is(containsSameInstance(userGroup)));
+
+        // Test
+        assertThat(user.removeUserGroupMemberOf(userGroup), is(true));
+        assertThat(user.removeUserGroupMemberOf(userGroup), is(false));
+        assertThat(user.getUserGroupsMemberOf(), is(emptySet()));
     }
 
     @Test

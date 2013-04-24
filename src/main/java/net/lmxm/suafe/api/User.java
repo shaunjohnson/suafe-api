@@ -72,6 +72,16 @@ public final class User {
     }
 
     /**
+     * Removes a user group from this user.
+     *
+     * @param userGroup User group to remove
+     * @return true if the user group was removed, otherwise false
+     */
+    protected  boolean removeUserGroupMemberOf(final UserGroup userGroup) {
+        return userGroupsMemberOf.remove(userGroup);
+    }
+
+    /**
      * Changes alias for this user.
      *
      * @param alias New alias for the user
