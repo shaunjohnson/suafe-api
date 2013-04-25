@@ -36,6 +36,37 @@ public final class UserGroupTest {
     }
 
     @Test
+    public void testAddUserGroup() {
+        assertThat(UserGroup.class, is(protectedMethod("addUserGroup")));
+
+        // Setup
+        final UserGroup member = new UserGroup("memberUserGroupName");
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        assertThat(userGroup.getUserGroups(), is(emptySet()));
+
+        // Test
+        assertThat(userGroup.addUserGroup(member), is(true));
+        assertThat(userGroup.addUserGroup(member), is(false));
+        assertThat(userGroup.getUserGroups(), is(not(emptySet())));
+        assertThat(userGroup.getUserGroups(), is(containsSameInstance(member)));
+    }
+
+    @Test
+    public void testGetUserGroups() {
+        // Setup
+        final UserGroup member = new UserGroup("memberUserGroupName");
+        final UserGroup userGroup = new UserGroup("serGroupName");
+        assertThat(userGroup.getUserGroups(), is(emptySet()));
+
+        // Test
+        assertThat(userGroup.addUserGroup(member), is(true));
+        assertThat(userGroup.getUserGroups(), is(not(emptySet())));
+        assertThat(userGroup.getUserGroups(), is(containsSameInstance(member)));
+        assertThat(userGroup.removeUserGroup(member), is(true));
+        assertThat(userGroup.getUserGroups(), is(emptySet()));
+    }
+
+    @Test
     public void testGetUsers() {
         final UserGroup userGroup = new UserGroup("userGroupName");
         assertThat(userGroup.getUsers(), is(immutableSet()));
@@ -58,6 +89,24 @@ public final class UserGroupTest {
         assertThat(userGroup.removeUser(user), is(true));
         assertThat(userGroup.removeUser(user), is(false));
         assertThat(userGroup.getUsers(), is(emptySet()));
+    }
+
+    @Test
+    public void testRemoveUserGroup() {
+        assertThat(UserGroup.class, is(protectedMethod("removeUserGroup")));
+
+        // Setup
+        final UserGroup member = new UserGroup("memberUserGroupName");
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        assertThat(userGroup.getUserGroups(), is(emptySet()));
+        assertThat(userGroup.addUserGroup(member), is(true));
+        assertThat(userGroup.getUserGroups(), is(not(emptySet())));
+        assertThat(userGroup.getUserGroups(), is(containsSameInstance(member)));
+
+        // Test
+        assertThat(userGroup.removeUserGroup(member), is(true));
+        assertThat(userGroup.removeUserGroup(member), is(false));
+        assertThat(userGroup.getUserGroups(), is(emptySet()));
     }
 
     @Test

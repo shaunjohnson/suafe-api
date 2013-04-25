@@ -14,6 +14,11 @@ public final class UserGroup {
     private String name;
 
     /**
+     * User groups in which this user is a member.
+     */
+    private final Set<UserGroup> userGroups = new HashSet<UserGroup>();
+
+    /**
      * Users that are part of this user group.
      */
     private final Set<User> users = new HashSet<User>();
@@ -34,6 +39,35 @@ public final class UserGroup {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Gets set of user groups in which this group is a member.
+     *
+     * @return Set of user groups
+     */
+    public Set<UserGroup> getUserGroups() {
+        return Collections.unmodifiableSet(userGroups);
+    }
+
+    /**
+     * Adds a user group to this group.
+     *
+     * @param userGroup User group to add
+     * @return true of user group is not already in the user, otherwise false
+     */
+    protected boolean addUserGroup(final UserGroup userGroup) {
+        return userGroups.add(userGroup);
+    }
+
+    /**
+     * Removes a user group from this group.
+     *
+     * @param userGroup User group to remove
+     * @return true if the user group was removed, otherwise false
+     */
+    protected  boolean removeUserGroup(final UserGroup userGroup) {
+        return userGroups.remove(userGroup);
     }
 
     /**
