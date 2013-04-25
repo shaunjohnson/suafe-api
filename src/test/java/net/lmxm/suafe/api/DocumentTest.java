@@ -373,6 +373,28 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testRemoveUserFromUserGroup() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", null);
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        assertThat(user.getUserGroups(), is(emptySet()));
+        assertThat(userGroup.getUserMembers(), is(emptySet()));
+        assertThat(document.addUserToUserGroup("userName", "userGroupName"), is(true));
+        assertThat(user.getUserGroups(), is(not(emptySet())));
+        assertThat(user.getUserGroups(), is(containsSameInstance(userGroup)));
+        assertThat(userGroup.getUserMembers(), is(not(emptySet())));
+        assertThat(userGroup.getUserMembers(), is(containsSameInstance(user)));
+
+        // Test
+        assertThat(document.removeUserFromUserGroup("userName", "userGroupName"), is(true));
+        assertThat(document.removeUserFromUserGroup("userName", "userGroupName"), is(false));
+        assertThat(user.getUserGroups(), is(emptySet()));
+        assertThat(userGroup.getUserMembers(), is(emptySet()));
+    }
+
+    @Test
     public void testRenameUserAlias() {
         final Document document = new Document();
 

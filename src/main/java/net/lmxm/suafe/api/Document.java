@@ -1,10 +1,10 @@
 package net.lmxm.suafe.api;
 
-import static net.lmxm.suafe.api.internal.DocumentPreconditions.*;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import static net.lmxm.suafe.api.internal.DocumentPreconditions.*;
 
 public final class Document {
     /**
@@ -163,7 +163,7 @@ public final class Document {
         final User user = checkThatUserWithNameExists(this, userName);
 
         for (final UserGroup userGroup : user.getUserGroups()) {
-            userGroup.removeUserMember(user);
+            removeUserFromUserGroup(userName, userGroup.getName());
         }
 
         users.remove(user);
@@ -179,7 +179,7 @@ public final class Document {
         final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
 
         for (final User user : userGroup.getUserMembers()) {
-            user.removeUserGroup(userGroup);
+            removeUserFromUserGroup(user.getName(), userGroupName);
         }
 
         // TODO remove group from its groups
@@ -284,6 +284,21 @@ public final class Document {
      */
     public Set<UserGroup> getUserGroups() {
         return Collections.unmodifiableSet(userGroups);
+    }
+
+    /**
+     * Removes a user from a user group.
+     *
+     * @param userName      Name of user to remove
+     * @param userGroupName Name of user group from which the user is removed
+     * @return True if the user was a member of the group, otherwise false
+     * @throws EntityDoesNotExistException When user or user group with name does not exist
+     */
+    public boolean removeUserFromUserGroup(final String userName, final String userGroupName) {
+        final User user = checkThatUserWithNameExists(this, userName);
+        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+
+        return user.removeUserGroup(userGroup) && userGroup.removeUserMember(user);
     }
 
     /**
