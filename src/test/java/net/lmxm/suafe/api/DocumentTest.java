@@ -253,7 +253,7 @@ public final class DocumentTest {
 
         // Test
         document.deleteUserGroup("userGroupName");
-        assertThat(user.getUserGroupscl(), is(emptySet()));
+        assertThat(user.getUserGroups(), is(emptySet()));
     }
 
     @Test
