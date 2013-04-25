@@ -21,7 +21,7 @@ public final class User {
     /**
      * User groups in which this user is a member.
      */
-    private final Set<UserGroup> userGroupsMemberOf = new HashSet<UserGroup>();
+    private final Set<UserGroup> userGroups = new HashSet<UserGroup>();
 
     /**
      * Construct a user with the provided name and optional alias.
@@ -57,8 +57,8 @@ public final class User {
      *
      * @return Set of user groups
      */
-    public Set<UserGroup> getUserGroupsMemberOf() {
-        return Collections.unmodifiableSet(userGroupsMemberOf);
+    public Set<UserGroup> getUserGroups() {
+        return Collections.unmodifiableSet(userGroups);
     }
 
     /**
@@ -67,8 +67,8 @@ public final class User {
      * @param userGroup User group to add
      * @return true of user group is not already in the user, otherwise false
      */
-    protected boolean addUserGroupMemberOf(final UserGroup userGroup) {
-        return userGroupsMemberOf.add(userGroup);
+    protected boolean addUserGroup(final UserGroup userGroup) {
+        return userGroups.add(userGroup);
     }
 
     /**
@@ -77,8 +77,8 @@ public final class User {
      * @param userGroup User group to remove
      * @return true if the user group was removed, otherwise false
      */
-    protected  boolean removeUserGroupMemberOf(final UserGroup userGroup) {
-        return userGroupsMemberOf.remove(userGroup);
+    protected  boolean removeUserGroup(final UserGroup userGroup) {
+        return userGroups.remove(userGroup);
     }
 
     /**
