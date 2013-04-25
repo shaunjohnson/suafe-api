@@ -15,24 +15,24 @@ public final class UserGroupTest {
 
         assertThat(new UserGroup("userGroupName").getName(), is(equalTo("userGroupName")));
 
-        assertThat(new UserGroup("userGroupName").getUsers(), is(emptySet()));
-        assertThat(new UserGroup("userGroupName").getUsers(), is(immutableSet()));
+        assertThat(new UserGroup("userGroupName").getUserMembers(), is(emptySet()));
+        assertThat(new UserGroup("userGroupName").getUserMembers(), is(immutableSet()));
     }
 
     @Test
     public void testAddUser() {
-        assertThat(UserGroup.class, is(protectedMethod("addUser")));
+        assertThat(UserGroup.class, is(protectedMethod("addUserMember")));
 
         // Setup
         final UserGroup userGroup = new UserGroup("userGroupName");
         final User user = new User("userName", null);
-        assertThat(userGroup.getUsers(), is(emptySet()));
+        assertThat(userGroup.getUserMembers(), is(emptySet()));
 
         // Test
-        assertThat(userGroup.addUser(user), is(true));
-        assertThat(userGroup.addUser(user), is(false));
-        assertThat(userGroup.getUsers(), is(not(emptySet())));
-        assertThat(userGroup.getUsers(), is(containsSameInstance(user)));
+        assertThat(userGroup.addUserMember(user), is(true));
+        assertThat(userGroup.addUserMember(user), is(false));
+        assertThat(userGroup.getUserMembers(), is(not(emptySet())));
+        assertThat(userGroup.getUserMembers(), is(containsSameInstance(user)));
     }
 
     @Test
@@ -67,28 +67,28 @@ public final class UserGroupTest {
     }
 
     @Test
-    public void testGetUsers() {
+    public void testGetUserMembers() {
         final UserGroup userGroup = new UserGroup("userGroupName");
-        assertThat(userGroup.getUsers(), is(immutableSet()));
-        assertThat(userGroup.getUsers(), is(notNullValue()));
+        assertThat(userGroup.getUserMembers(), is(immutableSet()));
+        assertThat(userGroup.getUserMembers(), is(notNullValue()));
     }
 
     @Test
     public void testRemoveUser() {
-        assertThat(UserGroup.class, is(protectedMethod("removeUser")));
+        assertThat(UserGroup.class, is(protectedMethod("removeUserMember")));
 
         // Setup
         final UserGroup userGroup = new UserGroup("userGroupName");
         final User user = new User("userName", null);
-        assertThat(userGroup.getUsers(), is(emptySet()));
-        assertThat(userGroup.addUser(user), is(true));
-        assertThat(userGroup.getUsers(), is(not(emptySet())));
-        assertThat(userGroup.getUsers(), is(containsSameInstance(user)));
+        assertThat(userGroup.getUserMembers(), is(emptySet()));
+        assertThat(userGroup.addUserMember(user), is(true));
+        assertThat(userGroup.getUserMembers(), is(not(emptySet())));
+        assertThat(userGroup.getUserMembers(), is(containsSameInstance(user)));
 
         // Test
-        assertThat(userGroup.removeUser(user), is(true));
-        assertThat(userGroup.removeUser(user), is(false));
-        assertThat(userGroup.getUsers(), is(emptySet()));
+        assertThat(userGroup.removeUserMember(user), is(true));
+        assertThat(userGroup.removeUserMember(user), is(false));
+        assertThat(userGroup.getUserMembers(), is(emptySet()));
     }
 
     @Test

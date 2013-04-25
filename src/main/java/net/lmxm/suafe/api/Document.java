@@ -34,7 +34,7 @@ public final class Document {
         final User user = checkThatUserWithNameExists(this, userName);
         final UserGroup userGroup = checkThatUserGroupWithNameExists(this, targetUserGroupName);
 
-        return userGroup.addUser(user) && user.addUserGroup(userGroup);
+        return userGroup.addUserMember(user) && user.addUserGroup(userGroup);
     }
 
     /**
@@ -81,7 +81,7 @@ public final class Document {
         final UserGroup existingUserGroup = checkThatUserGroupWithNameExists(this, userGroupName);
         final UserGroup cloneUserGroup = createUserGroup(cloneUserGroupName);
 
-        for (final User user : existingUserGroup.getUsers()) {
+        for (final User user : existingUserGroup.getUserMembers()) {
             addUserToUserGroup(user.getName(), cloneUserGroupName);
         }
 
@@ -163,7 +163,7 @@ public final class Document {
         final User user = checkThatUserWithNameExists(this, userName);
 
         for (final UserGroup userGroup : user.getUserGroups()) {
-            userGroup.removeUser(user);
+            userGroup.removeUserMember(user);
         }
 
         users.remove(user);
@@ -178,7 +178,7 @@ public final class Document {
     public void deleteUserGroup(final String userGroupName) {
         final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
 
-        for (final User user : userGroup.getUsers()) {
+        for (final User user : userGroup.getUserMembers()) {
             user.removeUserGroup(userGroup);
         }
 

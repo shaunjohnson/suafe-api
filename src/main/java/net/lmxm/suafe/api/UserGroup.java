@@ -19,9 +19,9 @@ public final class UserGroup {
     private final Set<UserGroup> userGroups = new HashSet<UserGroup>();
 
     /**
-     * Users that are part of this user group.
+     * Users that are members of this user group.
      */
-    private final Set<User> users = new HashSet<User>();
+    private final Set<User> userMembers = new HashSet<User>();
 
     /**
      * Construct a user group with the provided name.
@@ -71,12 +71,12 @@ public final class UserGroup {
     }
 
     /**
-     * Gets an immutable set of users that are part of this group.
+     * Gets an immutable set of users that are members of this group.
      *
-     * @return Set of users that are part of this group.
+     * @return Set of users that are members of this group.
      */
-    public Set<User> getUsers() {
-        return Collections.unmodifiableSet(users);
+    public Set<User> getUserMembers() {
+        return Collections.unmodifiableSet(userMembers);
     }
 
     /**
@@ -85,8 +85,8 @@ public final class UserGroup {
      * @param user User to add
      * @return true if user is not already in the user group, otherwise false
      */
-    protected boolean addUser(final User user) {
-        return users.add(user);
+    protected boolean addUserMember(final User user) {
+        return userMembers.add(user);
     }
 
     /**
@@ -95,8 +95,8 @@ public final class UserGroup {
      * @param user User to remove
      * @return true if user is removed from the user group, otherwise false
      */
-    protected boolean removeUser(final User user) {
-        return users.remove(user);
+    protected boolean removeUserMember(final User user) {
+        return userMembers.remove(user);
     }
 
     /**
