@@ -96,8 +96,12 @@ public final class Document {
         final UserGroup existingUserGroup = checkThatUserGroupWithNameExists(this, userGroupName);
         final UserGroup cloneUserGroup = createUserGroup(cloneUserGroupName);
 
-        for (final User user : existingUserGroup.getUserMembers()) {
-            addUserToUserGroup(user.getName(), cloneUserGroupName);
+        for (final User userMember : existingUserGroup.getUserMembers()) {
+            addUserToUserGroup(userMember.getName(), cloneUserGroupName);
+        }
+
+        for (final UserGroup userGroupMember : existingUserGroup.getUserGroupMembers()) {
+            addUserGroupToUserGroup(userGroupMember.getName(), cloneUserGroupName);
         }
 
         return cloneUserGroup;

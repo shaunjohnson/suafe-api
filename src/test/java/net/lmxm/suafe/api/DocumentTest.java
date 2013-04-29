@@ -84,9 +84,9 @@ public final class DocumentTest {
         final UserGroup userGroup = document.createUserGroup("userGroupName");
         document.addUserToUserGroup("userName", "userGroupName");
         assertThat(userGroup.getUserMembers(), is(not(emptySet())));
-        assertThat(userGroup.getUserMembers().iterator().next(), is(sameInstance(user)));
+        assertThat(userGroup.getUserMembers(), is(containsSameInstance(user)));
         assertThat(user.getUserGroups(), is(not(emptySet())));
-        assertThat(user.getUserGroups().iterator().next(), is(sameInstance(userGroup)));
+        assertThat(user.getUserGroups(), is(containsSameInstance(userGroup)));
 
         // Test
         final User cloneUser = document.cloneUser("userName", "cloneUserName", "cloneUserAlias");
@@ -125,9 +125,9 @@ public final class DocumentTest {
         final UserGroup userGroup = document.createUserGroup("userGroupName");
         document.addUserToUserGroup("userName", "userGroupName");
         assertThat(userGroup.getUserMembers(), is(not(emptySet())));
-        assertThat(userGroup.getUserMembers().iterator().next(), is(sameInstance(user)));
+        assertThat(userGroup.getUserMembers(), is(containsSameInstance(user)));
         assertThat(user.getUserGroups(), is(not(emptySet())));
-        assertThat(user.getUserGroups().iterator().next(), is(sameInstance(userGroup)));
+        assertThat(user.getUserGroups(), is(containsSameInstance(userGroup)));
 
         // Test
         final UserGroup cloneUserGroup = document.cloneUserGroup("userGroupName", "cloneUserGroupName");
@@ -135,6 +135,27 @@ public final class DocumentTest {
         assertThat(cloneUserGroup.getUserMembers(), is(containsSameInstance(user)));
         assertThat(user.getUserGroups(), is(not(emptySet())));
         assertThat(user.getUserGroups(), is(containsSameInstance(cloneUserGroup)));
+    }
+
+    @Test
+    public void testCloneUserGroup_UserGroups() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup memberUserGroup = document.createUserGroup("memberUserGroupName");
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        document.addUserGroupToUserGroup("memberUserGroupName", "userGroupName");
+        assertThat(userGroup.getUserGroupMembers(), is(not(emptySet())));
+        assertThat(userGroup.getUserGroupMembers(), is(containsSameInstance(memberUserGroup)));
+        assertThat(memberUserGroup.getUserGroups(), is(not(emptySet())));
+        assertThat(memberUserGroup.getUserGroups(), is(containsSameInstance(userGroup)));
+
+        // Test
+        final UserGroup cloneUserGroup = document.cloneUserGroup("userGroupName", "cloneUserGroupName");
+        assertThat(cloneUserGroup.getUserGroupMembers(), is(not(emptySet())));
+        assertThat(cloneUserGroup.getUserGroupMembers(), is(containsSameInstance(memberUserGroup)));
+        assertThat(memberUserGroup.getUserGroups(), is(not(emptySet())));
+        assertThat(memberUserGroup.getUserGroups(), is(containsSameInstance(cloneUserGroup)));
     }
 
     @Test
