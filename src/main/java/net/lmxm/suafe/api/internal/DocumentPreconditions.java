@@ -25,7 +25,7 @@ public final class DocumentPreconditions {
      */
     public static void checkThatRepositoryDoesNotExist(final Document document, final String repositoryName) {
         if (document.findRepositoryByName(repositoryName) != null) {
-            throw new EntityAlreadyExistsException("Repository with name \"" + repositoryName + "\" already exists");
+            throw new EntityAlreadyExistsException(MessageKey.repositoryWithNameAlreadyExists, repositoryName);
         }
     }
 
@@ -38,7 +38,7 @@ public final class DocumentPreconditions {
      */
     public static void checkThatUserWithAliasDoesNotExist(final Document document, final String userAlias) {
         if (document.findUserByAlias(userAlias) != null) {
-            throw new EntityAlreadyExistsException("User with alias \"" + userAlias + "\" already exists");
+            throw new EntityAlreadyExistsException(MessageKey.userWithAliasAlreadyExists, userAlias);
         }
     }
 
@@ -51,7 +51,7 @@ public final class DocumentPreconditions {
      */
     public static void checkThatUserWithNameDoesNotExist(final Document document, final String userName) {
         if (document.findUserByName(userName) != null) {
-            throw new EntityAlreadyExistsException("User with name \"" + userName + "\" already exists");
+            throw new EntityAlreadyExistsException(MessageKey.userWithNameAlreadyExists, userName);
         }
     }
 
@@ -64,7 +64,7 @@ public final class DocumentPreconditions {
      */
     public static void checkThatUserGroupWithNameDoesNotExist(final Document document, final String userGroupName) {
         if (document.findUserGroupByName(userGroupName) != null) {
-            throw new EntityAlreadyExistsException("User group with name \"" + userGroupName + "\" already exists");
+            throw new EntityAlreadyExistsException(MessageKey.userGroupWithNameAlreadyExists, userGroupName);
         }
     }
 
@@ -79,7 +79,7 @@ public final class DocumentPreconditions {
     public static Repository checkThatRepositoryExists(final Document document, final String repositoryName) {
         final Repository repository = document.findRepositoryByName(repositoryName);
         if (repository == null) {
-            throw new EntityDoesNotExistException("Repository with name \"" + repositoryName + "\" does not exist");
+            throw new EntityDoesNotExistException(MessageKey.repositoryWithNameDoesNotExist, repositoryName);
         }
 
         return repository;
@@ -96,7 +96,7 @@ public final class DocumentPreconditions {
     public static User checkThatUserWithNameExists(final Document document, final String userName) {
         final User user = document.findUserByName(userName);
         if (user == null) {
-            throw new EntityDoesNotExistException("User with name \"" + userName + "\" does not exist");
+            throw new EntityDoesNotExistException(MessageKey.userWithNameDoesNotExist, userName);
         }
 
         return user;
@@ -113,7 +113,7 @@ public final class DocumentPreconditions {
     public static UserGroup checkThatUserGroupWithNameExists(final Document document, final String userGroupName) {
         final UserGroup userGroup = document.findUserGroupByName(userGroupName);
         if (userGroup == null) {
-            throw new EntityDoesNotExistException("User group with name \"" + userGroupName + "\" does not exist");
+            throw new EntityDoesNotExistException(MessageKey.userGroupWithNameDoesNotExist, userGroupName);
         }
 
         return userGroup;

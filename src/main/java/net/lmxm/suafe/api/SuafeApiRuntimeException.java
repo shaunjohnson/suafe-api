@@ -1,11 +1,13 @@
 package net.lmxm.suafe.api;
 
+import net.lmxm.suafe.api.internal.MessageKey;
+import net.lmxm.suafe.api.internal.MessageResources;
+
 /**
- * Created with IntelliJ IDEA.
- * User: spjohnso
- * Date: 4/25/13
- * Time: 3:30 PM
- * To change this template use File | Settings | File Templates.
+ * A Suafe API runtime exception.
  */
-public class SuafeApiRuntimeException {
+public abstract class SuafeApiRuntimeException extends RuntimeException {
+    public SuafeApiRuntimeException(final MessageKey messageKey, final Object... arguments) {
+        super(MessageResources.get(messageKey, arguments));
+    }
 }

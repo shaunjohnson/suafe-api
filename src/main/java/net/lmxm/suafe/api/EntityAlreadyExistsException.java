@@ -1,7 +1,9 @@
 package net.lmxm.suafe.api;
 
-public final class EntityAlreadyExistsException extends RuntimeException {
-    public EntityAlreadyExistsException(final String message) {
-        super(message);
+import net.lmxm.suafe.api.internal.MessageKey;
+
+public final class EntityAlreadyExistsException extends SuafeApiRuntimeException {
+    public EntityAlreadyExistsException(final MessageKey messageKey, final Object... arguments) {
+        super(messageKey, arguments);
     }
 }

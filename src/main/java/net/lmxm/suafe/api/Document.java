@@ -290,7 +290,7 @@ public final class Document {
      * Removes a user from a user group.
      *
      * @param userName      Name of user to remove
-     * @param userGroupName Name of user group from which the user is removed
+     * @param userGroupName Name of user group from which the user is removedFileParser
      * @return True if the user was a member of the group, otherwise false
      * @throws EntityDoesNotExistException When user or user group with name does not exist
      */
