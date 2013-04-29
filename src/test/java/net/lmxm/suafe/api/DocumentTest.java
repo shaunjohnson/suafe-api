@@ -284,14 +284,30 @@ public final class DocumentTest {
 
         // Setup
         final UserGroup userGroup = document.createUserGroup("userGroupName");
-        final User user = document.createUser("userName", null);
-        document.addUserToUserGroup("userName", "userGroupName");
-        assertThat(userGroup.getUserMembers(), is(containsSameInstance(user)));
-        assertThat(user.getUserGroups(), is(containsSameInstance(userGroup)));
+        final User memberUser = document.createUser("memberUserName", null);
+        document.addUserToUserGroup("memberUserName", "userGroupName");
+        assertThat(userGroup.getUserMembers(), is(containsSameInstance(memberUser)));
+        assertThat(memberUser.getUserGroups(), is(containsSameInstance(userGroup)));
 
         // Test
         document.deleteUserGroup("userGroupName");
-        assertThat(user.getUserGroups(), is(emptySet()));
+        assertThat(memberUser.getUserGroups(), is(emptySet()));
+    }
+
+    @Test
+    public void testDeleteUserGroup_MemberUserGroups() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        final UserGroup memberUserGroup = document.createUserGroup("memberUserGroupName");
+        document.addUserGroupToUserGroup("memberUserGroupName", "userGroupName");
+        assertThat(userGroup.getUserGroupMembers(), is(containsSameInstance(memberUserGroup)));
+        assertThat(memberUserGroup.getUserGroups(), is(containsSameInstance(userGroup)));
+
+        // Test
+        document.deleteUserGroup("userGroupName");
+        assertThat(memberUserGroup.getUserGroups(), is(emptySet()));
     }
 
     @Test

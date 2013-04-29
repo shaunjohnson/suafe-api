@@ -201,6 +201,10 @@ public final class Document {
             removeUserFromUserGroup(memberUser.getName(), targetUserGroupName);
         }
 
+        for (final UserGroup memberUserGroup : targetUserGroup.getUserGroupMembers()) {
+            removeUserGroupFromUserGroup(memberUserGroup.getName(), targetUserGroupName);
+        }
+
         for (final UserGroup userGroup : targetUserGroup.getUserGroups()) {
             removeUserGroupFromUserGroup(targetUserGroupName, userGroup.getName());
         }
