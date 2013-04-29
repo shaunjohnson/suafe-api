@@ -19,6 +19,11 @@ public final class UserGroup {
     private final Set<UserGroup> userGroups = new HashSet<UserGroup>();
 
     /**
+     * User groups that are members of this user group.
+     */
+    private final Set<UserGroup> userGroupMembers = new HashSet<UserGroup>();
+
+    /**
      * Users that are members of this user group.
      */
     private final Set<User> userMembers = new HashSet<User>();
@@ -71,22 +76,51 @@ public final class UserGroup {
     }
 
     /**
+     * Gets an immutable set of user groups that are members of this group.
+     *
+     * @return Set of user groups that are members of this group
+     */
+    public Set<UserGroup> getUserGroupMembers() {
+        return Collections.unmodifiableSet(userGroupMembers);
+    }
+
+    /**
      * Gets an immutable set of users that are members of this group.
      *
-     * @return Set of users that are members of this group.
+     * @return Set of users that are members of this group
      */
     public Set<User> getUserMembers() {
         return Collections.unmodifiableSet(userMembers);
     }
 
     /**
-     * Adds a user to this user group.
+     * Adds a user group member to this user group.
      *
-     * @param user User to add
+     * @param userGroup User group member to add
+     * @return true if user group is not already in the user group, otherwise false
+     */
+    protected boolean addUserGroupMember(final UserGroup userGroup) {
+        return userGroupMembers.add(userGroup);
+    }
+
+    /**
+     * Adds a user member to this user group.
+     *
+     * @param user User member to add
      * @return true if user is not already in the user group, otherwise false
      */
     protected boolean addUserMember(final User user) {
         return userMembers.add(user);
+    }
+
+    /**
+     * Removes a user group from this user group.
+     *
+     * @param userGroup User group to remove
+     * @return true if user group is removed from the user group, otherwise false
+     */
+    protected boolean removeUserGroupMember(final UserGroup userGroup) {
+        return userGroupMembers.remove(userGroup);
     }
 
     /**

@@ -241,7 +241,24 @@ public final class DocumentTest {
     }
 
     @Test
-    public void testDeleteUserGroup_Users() {
+    public void testDeleteUserGroup_Groups() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        assertThat(userGroup.getUserGroupMembers(), is(emptySet()));
+        final UserGroup memberUserGroup = document.createUserGroup("memberUserGroupName");
+        document.addUserGroupToUserGroup("memberUserGroupName", "userGroupName");
+        assertThat(userGroup.getUserGroupMembers(), is(containsSameInstance(memberUserGroup)));
+        assertThat(memberUserGroup.getUserGroups(), is(containsSameInstance(userGroup)));
+
+        // Test
+        document.deleteUserGroup("memberUserGroupName");
+        assertThat(userGroup.getUserGroupMembers(), is(emptySet()));
+    }
+
+    @Test
+    public void testDeleteUserGroup_MemberUsers() {
         final Document document = new Document();
 
         // Setup

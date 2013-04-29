@@ -32,9 +32,24 @@ public final class Document {
      */
     public boolean addUserToUserGroup(final String userName, final String targetUserGroupName) {
         final User user = checkThatUserWithNameExists(this, userName);
-        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, targetUserGroupName);
+        final UserGroup targetUserGroup = checkThatUserGroupWithNameExists(this, targetUserGroupName);
 
-        return userGroup.addUserMember(user) && user.addUserGroup(userGroup);
+        return targetUserGroup.addUserMember(user) && user.addUserGroup(targetUserGroup);
+    }
+
+    /**
+     * Adds a user group to a user group.
+     *
+     * @param userGroupName Name of user group to add to user group
+     * @param targetUserGroupName Name of user group to which the user group is added
+     * @return true if the user group was not already in the user group
+     * @throws EntityDoesNotExistException When user group with name does not exist
+     */
+    public boolean addUserGroupToUserGroup(final String userGroupName, final String targetUserGroupName) {
+        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+        final UserGroup targetUserGroup = checkThatUserGroupWithNameExists(this, targetUserGroupName);
+
+        return targetUserGroup.addUserGroupMember(userGroup) && userGroup.addUserGroup(targetUserGroup);
     }
 
     /**
@@ -148,43 +163,45 @@ public final class Document {
      * @throws EntityDoesNotExistException When repository to delete does not exist
      */
     public void deleteRepository(final String repositoryName) {
-        final Repository repository = checkThatRepositoryExists(this, repositoryName);
+        final Repository targetRepository = checkThatRepositoryExists(this, repositoryName);
 
-        repositories.remove(repository);
+        repositories.remove(targetRepository);
     }
 
     /**
      * Deletes an existing user with the provided name.
      *
-     * @param userName Name of the user to delete
+     * @param targetUserName Name of the user to delete
      * @throws EntityDoesNotExistException When user to delete does not exist
      */
-    public void deleteUser(final String userName) {
-        final User user = checkThatUserWithNameExists(this, userName);
+    public void deleteUser(final String targetUserName) {
+        final User targetUser = checkThatUserWithNameExists(this, targetUserName);
 
-        for (final UserGroup userGroup : user.getUserGroups()) {
-            removeUserFromUserGroup(userName, userGroup.getName());
+        for (final UserGroup userGroup : targetUser.getUserGroups()) {
+            removeUserFromUserGroup(targetUserName, userGroup.getName());
         }
 
-        users.remove(user);
+        users.remove(targetUser);
     }
 
     /**
      * Deletes an existing user group with the provided name.
      *
-     * @param userGroupName Name of the user group to delete
+     * @param targetUserGroupName Name of the user group to delete
      * @throws EntityDoesNotExistException When user group to delete does not exist
      */
-    public void deleteUserGroup(final String userGroupName) {
-        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+    public void deleteUserGroup(final String targetUserGroupName) {
+        final UserGroup targetUserGroup = checkThatUserGroupWithNameExists(this, targetUserGroupName);
 
-        for (final User user : userGroup.getUserMembers()) {
-            removeUserFromUserGroup(user.getName(), userGroupName);
+        for (final User memberUser : targetUserGroup.getUserMembers()) {
+            removeUserFromUserGroup(memberUser.getName(), targetUserGroupName);
         }
 
-        // TODO remove group from its groups
+        for (final UserGroup userGroup : targetUserGroup.getUserGroups()) {
+            removeUserGroupFromUserGroup(targetUserGroupName, userGroup.getName());
+        }
 
-        userGroups.remove(userGroup);
+        userGroups.remove(targetUserGroup);
     }
 
     /**
@@ -290,15 +307,30 @@ public final class Document {
      * Removes a user from a user group.
      *
      * @param userName      Name of user to remove
-     * @param userGroupName Name of user group from which the user is removedFileParser
+     * @param targetUserGroupName Name of user group from which the user is removed
      * @return True if the user was a member of the group, otherwise false
      * @throws EntityDoesNotExistException When user or user group with name does not exist
      */
-    public boolean removeUserFromUserGroup(final String userName, final String userGroupName) {
+    public boolean removeUserFromUserGroup(final String userName, final String targetUserGroupName) {
         final User user = checkThatUserWithNameExists(this, userName);
-        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+        final UserGroup targetUserGroup = checkThatUserGroupWithNameExists(this, targetUserGroupName);
 
-        return user.removeUserGroup(userGroup) && userGroup.removeUserMember(user);
+        return user.removeUserGroup(targetUserGroup) && targetUserGroup.removeUserMember(user);
+    }
+
+    /**
+     * Removes a user from a user group.
+     *
+     * @param userGroupName      Name of user group to remove
+     * @param targetUserGroupName Name of user group from which the user group is removed
+     * @return True if the user group was a member of the group, otherwise false
+     * @throws EntityDoesNotExistException When user group with name does not exist
+     */
+    public boolean removeUserGroupFromUserGroup(final String userGroupName, final String targetUserGroupName) {
+        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+        final UserGroup targetUserGroup = checkThatUserGroupWithNameExists(this, targetUserGroupName);
+
+        return userGroup.removeUserGroup(targetUserGroup) && targetUserGroup.removeUserGroupMember(userGroup);
     }
 
     /**
