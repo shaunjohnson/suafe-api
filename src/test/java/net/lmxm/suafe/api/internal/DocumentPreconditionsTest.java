@@ -1,16 +1,15 @@
 package net.lmxm.suafe.api.internal;
 
+import static net.lmxm.suafe.api.AccessLevel.READ_WRITE;
 import static net.lmxm.suafe.api.internal.DocumentPreconditions.*;
 
-import net.lmxm.suafe.api.Document;
-import net.lmxm.suafe.api.EntityAlreadyExistsException;
-import net.lmxm.suafe.api.EntityDoesNotExistException;
+import net.lmxm.suafe.api.*;
+import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -101,6 +100,36 @@ public final class DocumentPreconditionsTest {
         checkArgumentPathValid("abc", "field");
         checkArgumentPathValid("/", "field");
         checkArgumentPathValid("a/b/c", "field");
+    }
+
+    @Test
+    public void testCheckThatAccessRuleForUserDoesNotExist() {
+        final Document document = new Document();
+
+        final User user = document.createUser("userName", null);
+
+        checkThatAccessRuleForUserDoesNotExist(document.getRootTreeNode(), "foo/bar", user);
+        document.addAccessRuleForUser(null, "foo/bar", "userName", READ_WRITE, false);
+
+        thrown.expect(EntityAlreadyExistsException.class);
+        thrown.expectMessage(CoreMatchers.containsString("userName"));
+        thrown.expectMessage(CoreMatchers.containsString("foo/bar"));
+        checkThatAccessRuleForUserDoesNotExist(document.getRootTreeNode(), "foo/bar", user);
+    }
+
+    @Test
+    public void testCheckThatAccessRuleForUserGroupDoesNotExist() {
+        final Document document = new Document();
+
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+
+        checkThatAccessRuleForUserGroupDoesNotExist(document.getRootTreeNode(), "foo/bar", userGroup);
+        document.addAccessRuleForUserGroup(null, "foo/bar", "userGroupName", READ_WRITE, false);
+
+        thrown.expect(EntityAlreadyExistsException.class);
+        thrown.expectMessage(CoreMatchers.containsString("userGroupName"));
+        thrown.expectMessage(CoreMatchers.containsString("foo/bar"));
+        checkThatAccessRuleForUserGroupDoesNotExist(document.getRootTreeNode(), "foo/bar", userGroup);
     }
 
     @Test
