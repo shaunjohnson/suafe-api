@@ -14,6 +14,11 @@ public final class UserGroup {
     private String name;
 
     /**
+     * Access rules that which apply to this user group.
+     */
+    private final Set<AccessRule> accessRules = new HashSet<>();
+
+    /**
      * User groups in which this user is a member.
      */
     private final Set<UserGroup> userGroups = new HashSet<UserGroup>();
@@ -44,6 +49,35 @@ public final class UserGroup {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Adds an access rule to this user group.
+     *
+     * @param accessRule Access rule to add
+     * @return true if the access rule is not already in the set of rules, otherwise false
+     */
+    protected boolean addAccessRule(final AccessRule accessRule) {
+        return accessRules.add(accessRule);
+    }
+
+    /**
+     * Removes an access rule from this user group.
+     *
+     * @param accessRule Access rule to remove
+     * @return true if the access rule was removed, otherwise false
+     */
+    protected boolean removeAccessRule(final AccessRule accessRule) {
+        return accessRules.remove(accessRule);
+    }
+
+    /**
+     * Gets set of access rules to which apply to this user group.
+     *
+     * @return Set of access rules
+     */
+    public Set<AccessRule> getAccessRules() {
+        return Collections.unmodifiableSet(accessRules);
     }
 
     /**

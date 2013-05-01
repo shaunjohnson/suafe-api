@@ -2,6 +2,7 @@ package net.lmxm.suafe.api;
 
 import org.junit.Test;
 
+import static net.lmxm.suafe.api.AccessLevel.READ_WRITE;
 import static net.lmxm.suafe.api.CustomMatchers.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertFalse;
@@ -17,6 +18,55 @@ public final class UserGroupTest {
 
         assertThat(new UserGroup("userGroupName").getUserMembers(), is(emptySet()));
         assertThat(new UserGroup("userGroupName").getUserMembers(), is(immutableSet()));
+    }
+
+    @Test
+    public void testAddAccessRule() {
+        assertThat(UserGroup.class, is(protectedMethod("addAccessRule")));
+
+        // Setup
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        final AccessRule accessRule = new AccessRule(userGroup, READ_WRITE, false);
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+
+        // Test
+        assertThat(userGroup.addAccessRule(accessRule), is(true));
+        assertThat(userGroup.addAccessRule(accessRule), is(false));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(containsSameInstance(accessRule)));
+    }
+
+    @Test
+    public void testGetAccessRules() {
+        // Setup
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        final AccessRule accessRule = new AccessRule(userGroup, READ_WRITE, false);
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+
+        // Test
+        assertThat(userGroup.addAccessRule(accessRule), is(true));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(containsSameInstance(accessRule)));
+        assertThat(userGroup.removeAccessRule(accessRule), is(true));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
+    public void testRemoveAccessRule() {
+        assertThat(UserGroup.class, is(protectedMethod("removeAccessRule")));
+
+        // Setup
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        final AccessRule accessRule = new AccessRule(userGroup, READ_WRITE, false);
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+        assertThat(userGroup.addAccessRule(accessRule), is(true));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(containsSameInstance(accessRule)));
+
+        // Test
+        assertThat(userGroup.removeAccessRule(accessRule), is(true));
+        assertThat(userGroup.removeAccessRule(accessRule), is(false));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
     }
 
     @Test
