@@ -1,6 +1,10 @@
 package net.lmxm.suafe.api;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static net.lmxm.suafe.api.AccessLevel.READ_WRITE;
 import static net.lmxm.suafe.api.CustomMatchers.*;
@@ -10,6 +14,9 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public final class UserGroupTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
     public void testUserGroup() {
         assertThat(UserGroup.class, is(protectedConstructor()));
@@ -18,6 +25,9 @@ public final class UserGroupTest {
 
         assertThat(new UserGroup("userGroupName").getUserMembers(), is(emptySet()));
         assertThat(new UserGroup("userGroupName").getUserMembers(), is(immutableSet()));
+
+        thrown.expect(IllegalArgumentException.class);
+        new UserGroup(null);
     }
 
     @Test
@@ -223,5 +233,10 @@ public final class UserGroupTest {
 
         userGroup.setName("newUserGroupName");
         assertThat(userGroup.getName(), is(equalTo("newUserGroupName")));
+    }
+
+    @Test
+    public void testEqualsContract() {
+        EqualsVerifier.forClass(User.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 }

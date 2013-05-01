@@ -1,5 +1,8 @@
 package net.lmxm.suafe.api;
 
+import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentNotBlank;
+import static net.lmxm.suafe.api.internal.Objects.equal;
+
 /**
  * Represents a Subversion repository.
  */
@@ -20,7 +23,7 @@ public final class Repository {
      * @param name Name of the new repository
      */
     protected Repository(final String name) {
-        this.name = name;
+        this.name = checkArgumentNotBlank(name, "Name");
     }
 
     /**
@@ -74,5 +77,30 @@ public final class Repository {
      */
     protected boolean addAccessRuleForUserGroup(final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
         return rootTreeNode.addAccessRuleForUserGroup(path, userGroup, accessLevel, exclusion);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (object == null) {
+            return false;
+        }
+
+        if (object == this) {
+            return true;
+        }
+
+        if (Repository.class.isInstance(object)) {
+            final Repository otherRepository = (Repository)object;
+
+            return equal(name, otherRepository.name);
+        }
+        else {
+            return false;
+        }
     }
 }

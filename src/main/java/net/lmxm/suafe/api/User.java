@@ -1,8 +1,14 @@
 package net.lmxm.suafe.api;
 
+import net.lmxm.suafe.api.internal.DocumentPreconditions;
+import net.lmxm.suafe.api.internal.Objects;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentNotBlank;
+import static net.lmxm.suafe.api.internal.Objects.equal;
 
 /**
  * User information.
@@ -35,7 +41,7 @@ public final class User {
      * @param alias Optional alias of the user
      */
     protected User(final String name, final String alias) {
-        this.name = name;
+        this.name = checkArgumentNotBlank(name, "Name");
         this.alias = alias;
     }
 
@@ -131,5 +137,30 @@ public final class User {
      */
     protected void setName(final String name) {
         this.name = name;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name, alias);
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (object == null) {
+            return false;
+        }
+
+        if (object == this) {
+            return true;
+        }
+
+        if (User.class.isInstance(object)) {
+            final User otherUser = (User)object;
+
+            return equal(name, otherUser.name) && equal(alias, otherUser.alias);
+        }
+        else {
+            return false;
+        }
     }
 }

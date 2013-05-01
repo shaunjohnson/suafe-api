@@ -1,8 +1,11 @@
 package net.lmxm.suafe.api;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static net.lmxm.suafe.api.AccessLevel.READ_ONLY;
 import static net.lmxm.suafe.api.AccessLevel.READ_WRITE;
 import static net.lmxm.suafe.api.CustomMatchers.emptySet;
 import static net.lmxm.suafe.api.CustomMatchers.protectedConstructor;
@@ -14,11 +17,17 @@ import static org.junit.Assert.assertThat;
  * Unit tests for repository objects.
  */
 public final class RepositoryTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
     public void testRepository() {
         assertThat(Repository.class, is(protectedConstructor()));
 
         assertThat(new Repository("repositoryName").getName(), is(equalTo("repositoryName")));
+
+        thrown.expect(IllegalArgumentException.class);
+        new Repository(null);
     }
 
     @Test
@@ -90,5 +99,10 @@ public final class RepositoryTest {
         assertThat(accessRule.getUserGroup(), is(sameInstance(userGroup)));
         assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
         assertThat(accessRule.isExclusion(), is(false));
+    }
+
+    @Test
+    public void testEqualsContract() {
+        EqualsVerifier.forClass(User.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 }

@@ -1,8 +1,13 @@
 package net.lmxm.suafe.api;
 
+import net.lmxm.suafe.api.internal.Objects;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentNotBlank;
+import static net.lmxm.suafe.api.internal.Objects.equal;
 
 /**
  * User group consisting of one or more users and/or user groups.
@@ -39,7 +44,7 @@ public final class UserGroup {
      * @param name Name of the user group
      */
     protected UserGroup(final String name) {
-        this.name = name;
+        this.name = checkArgumentNotBlank(name, "Name");
     }
 
     /**
@@ -174,5 +179,30 @@ public final class UserGroup {
      */
     protected void setName(final String name) {
         this.name = name;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (object == null) {
+            return false;
+        }
+
+        if (object == this) {
+            return true;
+        }
+
+        if (UserGroup.class.isInstance(object)) {
+            final UserGroup otherUserGroup = (UserGroup)object;
+
+            return equal(name, otherUserGroup.name);
+        }
+        else {
+            return false;
+        }
     }
 }
