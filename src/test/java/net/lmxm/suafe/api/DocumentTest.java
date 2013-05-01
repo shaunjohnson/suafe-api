@@ -39,6 +39,28 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testAddAccessRuleForUserServerWide() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", null);
+        assertThat(document.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+
+        // Test
+        document.addAccessRuleForUser(null, "/", "userName", READ_WRITE, false);
+        assertThat(document.getRootTreeNode().getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+        final AccessRule documentAccessRule = document.getRootTreeNode().getAccessRules().iterator().next();
+        final AccessRule userAccessRule = user.getAccessRules().iterator().next();
+        assertThat(userAccessRule, is(sameInstance(documentAccessRule)));
+        assertThat(userAccessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
+        assertThat(userAccessRule.getUser(), is(equalTo(user)));
+        assertThat(userAccessRule.getUserGroup(), is(nullValue()));
+        assertThat(userAccessRule.isExclusion(), is(false));
+    }
+
+    @Test
     public void testAddAccessRuleForUserGroup() {
         final Document document = new Document();
 
@@ -55,6 +77,28 @@ public final class DocumentTest {
         final AccessRule repositoryAccessRule = repository.getRootTreeNode().getAccessRules().iterator().next();
         final AccessRule userAccessRule = userGroup.getAccessRules().iterator().next();
         assertThat(userAccessRule, is(sameInstance(repositoryAccessRule)));
+        assertThat(userAccessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
+        assertThat(userAccessRule.getUser(), is(nullValue()));
+        assertThat(userAccessRule.getUserGroup(), is(equalTo(userGroup)));
+        assertThat(userAccessRule.isExclusion(), is(false));
+    }
+
+    @Test
+    public void testAddAccessRuleForUserGroupServerWide() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        assertThat(document.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+
+        // Test
+        document.addAccessRuleForUserGroup(null, "/", "userGroupName", READ_WRITE, false);
+        assertThat(document.getRootTreeNode().getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+        final AccessRule documentAccessRule = document.getRootTreeNode().getAccessRules().iterator().next();
+        final AccessRule userAccessRule = userGroup.getAccessRules().iterator().next();
+        assertThat(userAccessRule, is(sameInstance(documentAccessRule)));
         assertThat(userAccessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
         assertThat(userAccessRule.getUser(), is(nullValue()));
         assertThat(userAccessRule.getUserGroup(), is(equalTo(userGroup)));
@@ -429,6 +473,11 @@ public final class DocumentTest {
         assertThat(document.getRepositories(), is(notNullValue()));
         assertThat(document.getRepositories(), is(not(emptySet())));
         assertThat(document.getRepositories(), is(immutableSet()));
+    }
+
+    @Test
+    public void testGetRootTreeNode() {
+        assertThat(new Document().getRootTreeNode(), is(notNullValue()));
     }
 
     @Test

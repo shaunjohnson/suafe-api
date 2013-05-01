@@ -15,7 +15,7 @@ public final class Document {
     /**
      * Tree of all server-level (applicable to all repositories) access rules.
      */
-    private TreeNode serverAccessRules = new TreeNode();
+    private TreeNode rootTreeNode = new TreeNode();
 
     /**
      * Set of all users.
@@ -42,7 +42,7 @@ public final class Document {
         final User user = checkThatUserWithNameExists(this, userName);
 
         if (repository == null) {
-            return serverAccessRules.addAccessRuleForUser(path, user, accessLevel, exclusion);
+            return rootTreeNode.addAccessRuleForUser(path, user, accessLevel, exclusion);
         }
         else {
             return repository.addAccessRuleForUser(path, user, accessLevel, exclusion);
@@ -63,7 +63,7 @@ public final class Document {
         final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
 
         if (isBlank(repositoryName)) {
-            return serverAccessRules.addAccessRuleForUserGroup(path, userGroup, accessLevel, exclusion);
+            return rootTreeNode.addAccessRuleForUserGroup(path, userGroup, accessLevel, exclusion);
         }
         else {
             final Repository repository = checkThatRepositoryExists(this, repositoryName);
@@ -340,6 +340,15 @@ public final class Document {
      */
     public Set<Repository> getRepositories() {
         return Collections.unmodifiableSet(repositories);
+    }
+
+    /**
+     * Gets the root tree node for access rules/paths that are applicable to all repositories.
+     *
+     * @return Root tree node for server level paths and access rules
+     */
+    public TreeNode getRootTreeNode() {
+        return rootTreeNode;
     }
 
     /**
