@@ -13,6 +13,11 @@ public final class Document {
     private Set<Repository> repositories = new HashSet<Repository>();
 
     /**
+     * Tree of all server-level (applicable to all repositories) access rules.
+     */
+    private TreeNode serverAccessRules = new TreeNode();
+
+    /**
      * Set of all users.
      */
     private Set<User> users = new HashSet<User>();
@@ -21,6 +26,50 @@ public final class Document {
      * Set of all user groups.
      */
     private Set<UserGroup> userGroups = new HashSet<UserGroup>();
+
+    /**
+     * Adds a new access rule for the specified repository and user, with the provided access level and exclusion value.
+     *
+     * @param repositoryName Name of the repository to which the access rule applies. If null the access rule applies to all repositories
+     * @param path           Path to which the new rule applies
+     * @param userName       Name of user to which this rule applies
+     * @param accessLevel    Level of access to apply
+     * @param exclusion      Indicates if this rule applies to all users that are not in the provided user group
+     * @return True if the access rule is added, otherwise false
+     */
+    public boolean addAccessRuleForUser(final String repositoryName, final String path, final String userName, final AccessLevel accessLevel, final boolean exclusion) {
+        final Repository repository = isBlank(repositoryName) ? null : checkThatRepositoryExists(this, repositoryName);
+        final User user = checkThatUserWithNameExists(this, userName);
+
+        if (repository == null) {
+            return serverAccessRules.addAccessRuleForUser(path, user, accessLevel, exclusion);
+        }
+        else {
+            return repository.addAccessRuleForUser(path, user, accessLevel, exclusion);
+        }
+    }
+
+    /**
+     * Adds a new access rule for the specified repository and user, with the provided access level and exclusion value.
+     *
+     * @param repositoryName Name of the repository to which the access rule applies. If null the access rule applies to all repositories
+     * @param path           Path to which the new rule applies
+     * @param userGroupName  Name of user group to which this rule applies
+     * @param accessLevel    Level of access to apply
+     * @param exclusion      Indicates if this rule applies to all users that are not in the provided user group
+     * @return True if the access rule is added, otherwise false
+     */
+    public boolean addAccessRuleForUserGroup(final String repositoryName, final String path, final String userGroupName, final AccessLevel accessLevel, final boolean exclusion) {
+        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+
+        if (isBlank(repositoryName)) {
+            return serverAccessRules.addAccessRuleForUserGroup(path, userGroup, accessLevel, exclusion);
+        }
+        else {
+            final Repository repository = checkThatRepositoryExists(this, repositoryName);
+            return repository.addAccessRuleForUserGroup(path, userGroup, accessLevel, exclusion);
+        }
+    }
 
     /**
      * Adds a user to a user group.
@@ -40,7 +89,7 @@ public final class Document {
     /**
      * Adds a user group to a user group.
      *
-     * @param userGroupName Name of user group to add to user group
+     * @param userGroupName       Name of user group to add to user group
      * @param targetUserGroupName Name of user group to which the user group is added
      * @return true if the user group was not already in the user group
      * @throws EntityDoesNotExistException When user group with name does not exist
@@ -314,7 +363,7 @@ public final class Document {
     /**
      * Removes a user from a user group.
      *
-     * @param userName      Name of user to remove
+     * @param userName            Name of user to remove
      * @param targetUserGroupName Name of user group from which the user is removed
      * @return True if the user was a member of the group, otherwise false
      * @throws EntityDoesNotExistException When user or user group with name does not exist
@@ -329,7 +378,7 @@ public final class Document {
     /**
      * Removes a user from a user group.
      *
-     * @param userGroupName      Name of user group to remove
+     * @param userGroupName       Name of user group to remove
      * @param targetUserGroupName Name of user group from which the user group is removed
      * @return True if the user group was a member of the group, otherwise false
      * @throws EntityDoesNotExistException When user group with name does not exist
