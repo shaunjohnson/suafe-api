@@ -2,13 +2,10 @@ package net.lmxm.suafe.api;
 
 import org.junit.Test;
 
+import static net.lmxm.suafe.api.AccessLevel.READ_WRITE;
 import static net.lmxm.suafe.api.CustomMatchers.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public final class UserTest {
     @Test
@@ -23,6 +20,55 @@ public final class UserTest {
 
         assertThat(new User("userName", null).getUserGroups(), is(emptySet()));
         assertThat(new User("userName", null).getUserGroups(), is(immutableSet()));
+    }
+
+    @Test
+    public void testAddAccessRule() {
+        assertThat(User.class, is(protectedMethod("addAccessRule")));
+
+        // Setup
+        final User user = new User("userName", null);
+        final AccessRule accessRule = new AccessRule(user, READ_WRITE, false);
+        assertThat(user.getAccessRules(), is(emptySet()));
+
+        // Test
+        assertThat(user.addAccessRule(accessRule), is(true));
+        assertThat(user.addAccessRule(accessRule), is(false));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(containsSameInstance(accessRule)));
+    }
+
+    @Test
+    public void testGetAccessRules() {
+        // Setup
+        final User user = new User("userName", null);
+        final AccessRule accessRule = new AccessRule(user, READ_WRITE, false);
+        assertThat(user.getAccessRules(), is(emptySet()));
+
+        // Test
+        assertThat(user.addAccessRule(accessRule), is(true));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(containsSameInstance(accessRule)));
+        assertThat(user.removeAccessRule(accessRule), is(true));
+        assertThat(user.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
+    public void testRemoveAccessRule() {
+        assertThat(User.class, is(protectedMethod("removeAccessRule")));
+
+        // Setup
+        final User user = new User("userName", null);
+        final AccessRule accessRule = new AccessRule(user, READ_WRITE, false);
+        assertThat(user.getAccessRules(), is(emptySet()));
+        assertThat(user.addAccessRule(accessRule), is(true));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(containsSameInstance(accessRule)));
+
+        // Test
+        assertThat(user.removeAccessRule(accessRule), is(true));
+        assertThat(user.removeAccessRule(accessRule), is(false));
+        assertThat(user.getAccessRules(), is(emptySet()));
     }
 
     @Test

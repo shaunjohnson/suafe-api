@@ -19,9 +19,14 @@ public final class User {
     private String alias;
 
     /**
+     * Access rules that which apply to this user.
+     */
+    private final Set<AccessRule> accessRules = new HashSet<>();
+
+    /**
      * User groups in which this user is a member.
      */
-    private final Set<UserGroup> userGroups = new HashSet<UserGroup>();
+    private final Set<UserGroup> userGroups = new HashSet<>();
 
     /**
      * Construct a user with the provided name and optional alias.
@@ -62,10 +67,39 @@ public final class User {
     }
 
     /**
+     * Adds an access rule to this user.
+     *
+     * @param accessRule Access rule to add
+     * @return true if the access rule is not already in the set of rules, otherwise false
+     */
+    protected boolean addAccessRule(final AccessRule accessRule) {
+        return accessRules.add(accessRule);
+    }
+
+    /**
+     * Removes an access rule from this user.
+     *
+     * @param accessRule Access rule to remove
+     * @return true if the access rule was removed, otherwise false
+     */
+    protected boolean removeAccessRule(final AccessRule accessRule) {
+        return accessRules.remove(accessRule);
+    }
+
+    /**
+     * Gets set of access rules to which apply to this user.
+     *
+     * @return Set of access rules
+     */
+    public Set<AccessRule> getAccessRules() {
+        return Collections.unmodifiableSet(accessRules);
+    }
+
+    /**
      * Adds a user group to this user.
      *
      * @param userGroup User group to add
-     * @return true of user group is not already in the user, otherwise false
+     * @return true if user group is not already in the user, otherwise false
      */
     protected boolean addUserGroup(final UserGroup userGroup) {
         return userGroups.add(userGroup);
