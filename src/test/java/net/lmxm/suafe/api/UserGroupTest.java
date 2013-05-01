@@ -49,6 +49,8 @@ public final class UserGroupTest {
         assertThat(userGroup.getAccessRules(), is(containsSameInstance(accessRule)));
         assertThat(userGroup.removeAccessRule(accessRule), is(true));
         assertThat(userGroup.getAccessRules(), is(emptySet()));
+
+        assertThat(userGroup.getAccessRules(), is(immutableSet()));
     }
 
     @Test

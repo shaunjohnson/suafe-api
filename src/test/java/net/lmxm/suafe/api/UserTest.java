@@ -51,6 +51,8 @@ public final class UserTest {
         assertThat(user.getAccessRules(), is(containsSameInstance(accessRule)));
         assertThat(user.removeAccessRule(accessRule), is(true));
         assertThat(user.getAccessRules(), is(emptySet()));
+
+        assertThat(user.getAccessRules(), is(immutableSet()));
     }
 
     @Test
