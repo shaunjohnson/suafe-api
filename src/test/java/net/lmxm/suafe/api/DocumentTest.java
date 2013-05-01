@@ -174,7 +174,7 @@ public final class DocumentTest {
     }
 
     @Test
-    public void testCreateUser() {
+    public void testCreateUserUserNameAlreadyExists() {
         final Document document = new Document();
 
         // Setup
@@ -185,11 +185,18 @@ public final class DocumentTest {
         // Test
         thrown.expect(EntityAlreadyExistsException.class);
         document.createUser("userName", null);
+    }
 
+    @Test
+    public void testCreateUserUserAliasAlreadyExists() {
+        final Document document = new Document();
+
+        // Setup
         assertThat(document.findUserByAlias("userAlias"), is(nullValue()));
         document.createUser("userName1", "userAlias");
         assertThat(document.findUserByAlias("userAlias"), is(notNullValue()));
 
+        // Test
         thrown.expect(EntityAlreadyExistsException.class);
         document.createUser("userName2", "userAlias");
     }
