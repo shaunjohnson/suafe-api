@@ -15,12 +15,15 @@ public final class DocumentPreconditions {
      *
      * @param argument  Argument to check
      * @param fieldName Name of the argument field being checked
+     * @return The argument passed in, if not blank
      * @throws IllegalArgumentException When argument is blank
      */
-    public static void checkArgumentNotBlank(final String argument, final String fieldName) {
+    public static String checkArgumentNotBlank(final String argument, final String fieldName) {
         if (isBlank(argument)) {
             throw new IllegalArgumentException(fieldName + " may not be null/blank");
         }
+
+        return argument;
     }
 
     /**

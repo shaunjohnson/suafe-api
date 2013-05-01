@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertThat;
@@ -40,8 +41,8 @@ public final class DocumentPreconditionsTest {
 
     @Test
     public void testCheckArgumentNotBlankValidValues() {
-        checkArgumentNotBlank("a", "field");
-        checkArgumentNotBlank("abc", "field");
+        assertThat(checkArgumentNotBlank("a", "field"), is(equalTo("a")));
+        assertThat(checkArgumentNotBlank("abc", "field"), is(equalTo("abc")));
     }
 
     @Test
