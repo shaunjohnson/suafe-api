@@ -16,7 +16,7 @@ public final class UserGroup {
     /**
      * Access rules that which apply to this user group.
      */
-    private final Set<AccessRule> accessRules = new HashSet<>();
+    private final Set<AccessRule> accessRules = new HashSet<AccessRule>();
 
     /**
      * User groups in which this user is a member.

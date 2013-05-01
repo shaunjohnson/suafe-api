@@ -19,12 +19,12 @@ public final class TreeNode {
     /**
      * Set of all access rules that apply to this node.
      */
-    private final Set<AccessRule> accessRules = new HashSet<>();
+    private final Set<AccessRule> accessRules = new HashSet<AccessRule>();
 
     /**
      * Map of all of this node's children.
      */
-    private final Map<String, TreeNode> children = new HashMap<>();
+    private final Map<String, TreeNode> children = new HashMap<String, TreeNode>();
 
     /**
      * Parent node of this node; will be null for a root node.
@@ -123,7 +123,7 @@ public final class TreeNode {
      * @return Set of tree node's that are immediate children of this node.
      */
     public Set<TreeNode> getChildren() {
-        return Collections.unmodifiableSet(new HashSet<>(children.values()));
+        return Collections.unmodifiableSet(new HashSet<TreeNode>(children.values()));
     }
 
     /**
@@ -162,7 +162,7 @@ public final class TreeNode {
      * @return Linked list containing all path parts
      */
     protected static LinkedList<String> splitPath(final String path) {
-        final LinkedList<String> linkedList = new LinkedList<>();
+        final LinkedList<String> linkedList = new LinkedList<String>();
         Collections.addAll(linkedList, path.split("/"));
         return linkedList;
     }

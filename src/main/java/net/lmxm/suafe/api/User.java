@@ -21,12 +21,12 @@ public final class User {
     /**
      * Access rules that which apply to this user.
      */
-    private final Set<AccessRule> accessRules = new HashSet<>();
+    private final Set<AccessRule> accessRules = new HashSet<AccessRule>();
 
     /**
      * User groups in which this user is a member.
      */
-    private final Set<UserGroup> userGroups = new HashSet<>();
+    private final Set<UserGroup> userGroups = new HashSet<UserGroup>();
 
     /**
      * Construct a user with the provided name and optional alias.
