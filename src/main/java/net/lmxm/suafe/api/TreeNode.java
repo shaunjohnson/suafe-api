@@ -2,9 +2,7 @@ package net.lmxm.suafe.api;
 
 import java.util.*;
 
-import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentNotBlank;
-import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentNotNull;
-import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentPathValid;
+import static net.lmxm.suafe.api.internal.DocumentPreconditions.*;
 
 /**
  * Tree node representing a single node in a tree. Each node contains references to all access rules that apply to that
@@ -62,11 +60,13 @@ public final class TreeNode {
      * @param accessLevel Level of access to apply
      * @param exclusion   Indicates if this rule applies to all users that are not the provided user
      * @return true if the access rule is added, otherwise false
+     * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
      */
     protected boolean addAccessRuleForUser(final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
         checkArgumentPathValid(path, "Path");
         checkArgumentNotNull(user, "User");
         checkArgumentNotNull(accessLevel, "Access level");
+        checkThatAccessRuleForUserDoesNotExist(this, path, user);
 
         final AccessRule accessRule = new AccessRule(user, accessLevel, exclusion);
         return buildTree(path, this).accessRules.add(accessRule) && user.addAccessRule(accessRule);
@@ -80,14 +80,104 @@ public final class TreeNode {
      * @param accessLevel Level of access to apply
      * @param exclusion   Indicates if this rule applies to all users that are not in the provided user group
      * @return true if the access rule is added, otherwise false
+     * @throws EntityAlreadyExistsException When access rule already exists at this path for this user group
      */
     protected boolean addAccessRuleForUserGroup(final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
         checkArgumentPathValid(path, "Path");
         checkArgumentNotNull(userGroup, "User group");
         checkArgumentNotNull(accessLevel, "Access level");
+        checkThatAccessRuleForUserGroupDoesNotExist(this, path, userGroup);
 
         final AccessRule accessRule = new AccessRule(userGroup, accessLevel, exclusion);
         return buildTree(path, this).accessRules.add(accessRule) && userGroup.addAccessRule(accessRule);
+    }
+
+    /**
+     * Finds an ancestor node at the provided path.
+     *
+     * @param path Path of ancestor node to find
+     * @return Matching node or null if no nodes exist at the path
+     */
+    protected TreeNode findByPath(final String path) {
+        checkArgumentPathValid(path, "Path");
+
+        TreeNode matchingNode = this;
+        final LinkedList<String> nodeNames = splitPath(path);
+        if (nodeNames.size() > 0) {
+            for (final String name : nodeNames) {
+                matchingNode = matchingNode.children.get(name);
+
+                if (matchingNode == null) {
+                    break;
+                }
+            }
+        }
+
+        return matchingNode;
+    }
+
+    /**
+     * Finds an access rule for the specified user.
+     *
+     * @param user User that is used to find a matching access rule
+     * @return Access rule that applies to the specified user
+     */
+    public AccessRule findAccessRuleForUser(final User user) {
+        checkArgumentNotNull(user, "User");
+
+        AccessRule foundAccessRule = null;
+        for (final AccessRule accessRule : accessRules) {
+            if (accessRule.getUser() != null && accessRule.getUser().equals(user)) {
+                foundAccessRule = accessRule;
+                break;
+            }
+        }
+
+        return foundAccessRule;
+    }
+
+    /**
+     * Finds an access rule for the specified user at the provided path.
+     *
+     * @param path Path of tree node to find
+     * @param user User that is used to find a matching access rule
+     * @return Access that applies to the specified user
+     */
+    public AccessRule findAccessRuleForUserAtPath(final String path, final User user) {
+        final TreeNode treeNode = findByPath(path);
+        return treeNode == null ? null : treeNode.findAccessRuleForUser(user);
+    }
+
+    /**
+     * Finds an access rule for the specified user group.
+     *
+     * @param userGroup group User group that is used to find a matching access rule
+     * @return Access rule that applies to the specified user group
+     */
+    public AccessRule findAccessRuleForUserGroup(final UserGroup userGroup) {
+        checkArgumentNotNull(userGroup, "User group");
+
+        AccessRule foundAccessRule = null;
+        for (final AccessRule accessRule : accessRules) {
+            if (accessRule.getUserGroup() != null && accessRule.getUserGroup().equals(userGroup)) {
+                foundAccessRule = accessRule;
+                break;
+            }
+        }
+
+        return foundAccessRule;
+    }
+
+    /**
+     * Finds an access rule for the specified user group at the provided path.
+     *
+     * @param path Path of tree node to find
+     * @param userGroup User group that is used to find a matching access rule
+     * @return Access that applies to the specified user group
+     */
+    public AccessRule findAccessRuleForUserGroupAtPath(final String path, final UserGroup userGroup) {
+        final TreeNode treeNode = findByPath(path);
+        return treeNode == null ? null : treeNode.findAccessRuleForUserGroup(userGroup);
     }
 
     /**
@@ -97,7 +187,7 @@ public final class TreeNode {
      * @param name Name of the child node to find or create
      * @return Matching child node or new child node
      */
-    private TreeNode findOrCreateChild(final String name) {
+    private TreeNode findOrCreateChildByName(final String name) {
         if (children.containsKey(name)) {
             return children.get(name);
         }
@@ -179,7 +269,7 @@ public final class TreeNode {
             return treeNode;
         }
         else {
-            final TreeNode childTreeNode = treeNode.findOrCreateChild(nodeNames.pop());
+            final TreeNode childTreeNode = treeNode.findOrCreateChildByName(nodeNames.pop());
             return buildTreeRecursively(nodeNames, childTreeNode);
         }
     }
