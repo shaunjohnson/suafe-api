@@ -18,25 +18,88 @@ public final class DocumentPreconditionsTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testCheckArgumentNotBlank() {
-        // Test null
+    public void testCheckArgumentNotBlankNullValues() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(containsString("field"));
         checkArgumentNotBlank(null, "field");
+    }
 
-        // Test empty
+    @Test
+    public void testCheckArgumentNotBlankEmptyValues() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(containsString("field"));
         checkArgumentNotBlank("", "field");
+    }
 
-        // Test blank
+    @Test
+    public void testCheckArgumentNotBlankBlankValues() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(containsString("field"));
         checkArgumentNotBlank("    ", "field");
+    }
 
-        // Test valid values
+    @Test
+    public void testCheckArgumentNotBlankValidValues() {
         checkArgumentNotBlank("a", "field");
         checkArgumentNotBlank("abc", "field");
+    }
+
+    @Test
+    public void testCheckArgumentNotNullInvalidValues() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(containsString("field"));
+        checkArgumentNotNull(null, "field");
+    }
+
+    @Test
+    public void testCheckArgumentNotNullValidValues() {
+        checkArgumentNotNull("", "field");
+        checkArgumentNotNull("a", "field");
+        checkArgumentNotNull("abc", "field");
+        checkArgumentNotNull(42, "field");
+    }
+
+    @Test
+    public void testCheckArgumentPathValidNullValues() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(containsString("field"));
+        checkArgumentPathValid(null, "field");
+    }
+
+    @Test
+    public void testCheckArgumentPathValidEmptyValues() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(containsString("field"));
+        checkArgumentPathValid("", "field");
+    }
+
+    @Test
+    public void testCheckArgumentPathValidBlankValues() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(containsString("field"));
+        checkArgumentPathValid("    ", "field");
+    }
+
+    @Test
+    public void testCheckArgumentPathValidLeadingSlash() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(containsString("field"));
+        checkArgumentPathValid("/leading/slash/not/allowed", "field");
+    }
+
+    @Test
+    public void testCheckArgumentPathValidTrailingSlash() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(containsString("field"));
+        checkArgumentPathValid("leading/slash/not/allowed/", "field");
+    }
+
+    @Test
+    public void testCheckArgumentPathValidValidValues() {
+        checkArgumentNotBlank("a", "field");
+        checkArgumentPathValid("abc", "field");
+        checkArgumentPathValid("/", "field");
+        checkArgumentPathValid("a/b/c", "field");
     }
 
     @Test
@@ -55,7 +118,7 @@ public final class DocumentPreconditionsTest {
     }
 
     @Test
-    public void testCheckThatRepositoryAlreadyExists() {
+    public void testCheckThatRepositoryAlreadyExistsInvalidValues() {
         final Document document = new Document();
 
         // Test clean document check
@@ -63,6 +126,11 @@ public final class DocumentPreconditionsTest {
         thrown.expectMessage(containsString("repositoryName"));
         thrown.expectMessage(containsString("does not exist"));
         checkThatRepositoryExists(document, "repositoryName");
+    }
+
+    @Test
+    public void testCheckThatRepositoryAlreadyExistsValidValues() {
+        final Document document = new Document();
 
         // Test after adding first repository
         document.createRepository("repositoryName");
@@ -115,7 +183,7 @@ public final class DocumentPreconditionsTest {
     }
 
     @Test
-    public void testCheckThatUserWithNameExists() {
+    public void testCheckThatUserWithNameExistsInvalidValues() {
         final Document document = new Document();
 
         // Test clean document check
@@ -123,6 +191,11 @@ public final class DocumentPreconditionsTest {
         thrown.expectMessage(containsString("userName"));
         thrown.expectMessage(containsString("does not exist"));
         checkThatUserWithNameExists(document, "userName");
+    }
+
+    @Test
+    public void testCheckThatUserWithNameExistsValidValues() {
+        final Document document = new Document();
 
         // Test after adding first user
         document.createUser("userName", null);
@@ -130,7 +203,7 @@ public final class DocumentPreconditionsTest {
     }
 
     @Test
-    public void testCheckThatUserGroupWithNameExists() {
+    public void testCheckThatUserGroupWithNameExistsInvalidValues() {
         final Document document = new Document();
 
         // Test clean document check
@@ -138,6 +211,11 @@ public final class DocumentPreconditionsTest {
         thrown.expectMessage(containsString("userGroupName"));
         thrown.expectMessage(containsString("does not exist"));
         checkThatUserGroupWithNameExists(document, "userGroupName");
+    }
+
+    @Test
+    public void testCheckThatUserGroupWithNameExistsValidValues() {
+        final Document document = new Document();
 
         // Test after adding first user group
         document.createUserGroup("userGroupName");

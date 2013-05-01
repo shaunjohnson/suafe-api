@@ -2,7 +2,14 @@ package net.lmxm.suafe.api.internal;
 
 import net.lmxm.suafe.api.*;
 
+import java.util.regex.Pattern;
+
 public final class DocumentPreconditions {
+    /**
+     * Regular expression pattern representing a valid path value.
+     */
+    private static final Pattern VALID_PATH_PATTERN = Pattern.compile("^(/)|(\\w+(/\\w+)*)$");
+
     /**
      * Checks if the provided argument is blank.
      *
@@ -13,6 +20,36 @@ public final class DocumentPreconditions {
     public static void checkArgumentNotBlank(final String argument, final String fieldName) {
         if (isBlank(argument)) {
             throw new IllegalArgumentException(fieldName + " may not be null/blank");
+        }
+    }
+
+    /**
+     * Checks if the provided argument is null.
+     *
+     * @param argument  Argument to check
+     * @param fieldName Name of the argument field being checked
+     * @throws IllegalArgumentException When argument is null
+     */
+    public static void checkArgumentNotNull(final Object argument, final String fieldName) {
+        if (argument == null) {
+            throw new IllegalArgumentException(fieldName + " may not be null");
+        }
+    }
+
+    /**
+     * Checks if the provided argument is null.
+     *
+     * @param argument  Argument to check
+     * @param fieldName Name of the argument field being checked
+     * @throws IllegalArgumentException When argument is null
+     */
+    public static void checkArgumentPathValid(final String argument, final String fieldName) {
+        if (isBlank(argument)) {
+            throw new IllegalArgumentException(fieldName + " may not be null/blank");
+        }
+
+        if (!VALID_PATH_PATTERN.matcher(argument).matches()) {
+            throw new IllegalArgumentException(fieldName + " is not a valid path");
         }
     }
 
