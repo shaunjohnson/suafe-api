@@ -17,26 +17,31 @@ public final class TreeNodeTest {
     @Test
     public void testAddAccessRuleForUserShallow() {
         final TreeNode treeNode = new TreeNode();
-        assertThat(treeNode.getAccessRules(), is(emptySet()));
-
         final User user = new User("userName", null);
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+
         treeNode.addAccessRuleForUser("/", user, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
 
-        final AccessRule shallowAccessRule = treeNode.getAccessRules().iterator().next();
-        assertThat(shallowAccessRule.getUser(), is(sameInstance(user)));
-        assertThat(shallowAccessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
-        assertThat(shallowAccessRule.isExclusion(), is(false));
+        final AccessRule accessRule = treeNode.getAccessRules().iterator().next();
+        assertThat(accessRule.getUser(), is(sameInstance(user)));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
+        assertThat(accessRule.isExclusion(), is(false));
+        assertThat(user.getAccessRules(), is(containsSameInstance(accessRule)));
     }
 
     @Test
     public void testAddAccessRuleForUserDeep() {
         final TreeNode treeNode = new TreeNode();
-        assertThat(treeNode.getAccessRules(), is(emptySet()));
-
         final User user = new User("userName", null);
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+
         treeNode.addAccessRuleForUser("foo/bar", user, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
 
         final TreeNode fooTreeNode = treeNode.getChildren().iterator().next();
         assertThat(fooTreeNode.getAccessRules(), is(emptySet()));
@@ -44,35 +49,41 @@ public final class TreeNodeTest {
         final TreeNode barTreeNode = fooTreeNode.getChildren().iterator().next();
         assertThat(barTreeNode.getAccessRules(), is(not(emptySet())));
 
-        final AccessRule deepAccessRule = barTreeNode.getAccessRules().iterator().next();
-        assertThat(deepAccessRule.getUser(), is(sameInstance(user)));
-        assertThat(deepAccessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
-        assertThat(deepAccessRule.isExclusion(), is(false));
+        final AccessRule accessRule = barTreeNode.getAccessRules().iterator().next();
+        assertThat(accessRule.getUser(), is(sameInstance(user)));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
+        assertThat(accessRule.isExclusion(), is(false));
+        assertThat(user.getAccessRules(), is(containsSameInstance(accessRule)));
     }
 
     @Test
     public void testAddAccessRuleForUserGroupShallow() {
         final TreeNode treeNode = new TreeNode();
-        assertThat(treeNode.getAccessRules(), is(emptySet()));
-
         final UserGroup userGroup = new UserGroup("userGroupName");
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+
         treeNode.addAccessRuleForUserGroup("/", userGroup, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
 
-        final AccessRule shallowAccessRule = treeNode.getAccessRules().iterator().next();
-        assertThat(shallowAccessRule.getUserGroup(), is(sameInstance(userGroup)));
-        assertThat(shallowAccessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
-        assertThat(shallowAccessRule.isExclusion(), is(false));
+        final AccessRule accessRule = treeNode.getAccessRules().iterator().next();
+        assertThat(accessRule.getUserGroup(), is(sameInstance(userGroup)));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
+        assertThat(accessRule.isExclusion(), is(false));
+        assertThat(userGroup.getAccessRules(), is(containsSameInstance(accessRule)));
     }
 
     @Test
     public void testAddAccessRuleForUserGroupDeep() {
         final TreeNode treeNode = new TreeNode();
-        assertThat(treeNode.getAccessRules(), is(emptySet()));
-
         final UserGroup userGroup = new UserGroup("userGroupName");
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+
         treeNode.addAccessRuleForUserGroup("foo/bar", userGroup, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
 
         final TreeNode fooTreeNode = treeNode.getChildren().iterator().next();
         assertThat(fooTreeNode.getAccessRules(), is(emptySet()));
@@ -80,10 +91,11 @@ public final class TreeNodeTest {
         final TreeNode barTreeNode = fooTreeNode.getChildren().iterator().next();
         assertThat(barTreeNode.getAccessRules(), is(not(emptySet())));
 
-        final AccessRule deepAccessRule = barTreeNode.getAccessRules().iterator().next();
-        assertThat(deepAccessRule.getUserGroup(), is(sameInstance(userGroup)));
-        assertThat(deepAccessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
-        assertThat(deepAccessRule.isExclusion(), is(false));
+        final AccessRule accessRule = barTreeNode.getAccessRules().iterator().next();
+        assertThat(accessRule.getUserGroup(), is(sameInstance(userGroup)));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
+        assertThat(accessRule.isExclusion(), is(false));
+        assertThat(userGroup.getAccessRules(), is(containsSameInstance(accessRule)));
     }
 
     @Test

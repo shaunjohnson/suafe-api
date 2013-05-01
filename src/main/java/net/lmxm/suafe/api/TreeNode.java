@@ -61,14 +61,15 @@ public final class TreeNode {
      * @param user        User to which this rule applies
      * @param accessLevel Level of access to apply
      * @param exclusion   Indicates if this rule applies to all users that are not the provided user
-     * @return True if the access rule is added, otherwise false
+     * @return true if the access rule is added, otherwise false
      */
     protected boolean addAccessRuleForUser(final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
         checkArgumentPathValid(path, "Path");
         checkArgumentNotNull(user, "User");
         checkArgumentNotNull(accessLevel, "Access level");
 
-        return buildTree(path, this).accessRules.add(new AccessRule(user, accessLevel, exclusion));
+        final AccessRule accessRule = new AccessRule(user, accessLevel, exclusion);
+        return buildTree(path, this).accessRules.add(accessRule) && user.addAccessRule(accessRule);
     }
 
     /**
@@ -78,14 +79,15 @@ public final class TreeNode {
      * @param userGroup   User group to which this rule applies
      * @param accessLevel Level of access to apply
      * @param exclusion   Indicates if this rule applies to all users that are not in the provided user group
-     * @return True if the access rule is added, otherwise false
+     * @return true if the access rule is added, otherwise false
      */
     protected boolean addAccessRuleForUserGroup(final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
         checkArgumentPathValid(path, "Path");
         checkArgumentNotNull(userGroup, "User group");
         checkArgumentNotNull(accessLevel, "Access level");
 
-        return buildTree(path, this).accessRules.add(new AccessRule(userGroup, accessLevel, exclusion));
+        final AccessRule accessRule = new AccessRule(userGroup, accessLevel, exclusion);
+        return buildTree(path, this).accessRules.add(accessRule) && userGroup.addAccessRule(accessRule);
     }
 
     /**
