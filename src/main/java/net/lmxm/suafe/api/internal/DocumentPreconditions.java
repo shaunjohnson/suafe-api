@@ -8,7 +8,7 @@ public final class DocumentPreconditions {
     /**
      * Regular expression pattern representing a valid path value.
      */
-    private static final Pattern VALID_PATH_PATTERN = Pattern.compile("^(/)|(\\w+(/\\w+)*)$");
+    private static final Pattern VALID_PATH_PATTERN = Pattern.compile("^(/)|([^/=]+(/[^/=]+)*)$");
 
     /**
      * Checks if the provided argument is blank.
