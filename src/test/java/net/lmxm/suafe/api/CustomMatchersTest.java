@@ -38,10 +38,21 @@ public final class CustomMatchersTest {
     }
 
     @Test
+    public void testContainsNodeWithName() {
+        // Setup
+        final Set<TreeNode> set = new HashSet<>();
+        set.add(new TreeNode("foobar", new TreeNode()));
+
+        // Test
+        assertThat(set, is(containsNodeWithName("foobar")));
+        assertThat(set, is(not(containsNodeWithName("does not exist"))));
+    }
+
+    @Test
     public void testContainsSameInstance() {
         // Setup
         final String target = "target";
-        final Set<String> set = new HashSet<String>();
+        final Set<String> set = new HashSet<>();
         assertThat(set, is(not(containsSameInstance(target))));
 
         // Test
@@ -52,7 +63,7 @@ public final class CustomMatchersTest {
 
     @Test
     public void testEmptySet() {
-        final Set<String> set = new HashSet<String>();
+        final Set<String> set = new HashSet<>();
         assertThat(set, is(emptySet()));
 
         set.add("foobar");
@@ -61,7 +72,7 @@ public final class CustomMatchersTest {
 
     @Test
     public void testImmutableSet() {
-        final Set<String> mutableSet = new HashSet<String>();
+        final Set<String> mutableSet = new HashSet<>();
         assertThat(mutableSet, is(not(immutableSet())));
 
         final Set<String> immutableSet = Collections.unmodifiableSet(mutableSet);

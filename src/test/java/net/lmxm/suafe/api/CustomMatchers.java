@@ -16,7 +16,7 @@ public final class CustomMatchers {
     /**
      * Matcher that ensures a set contains an object.
      *
-     * @return Empty set matcher
+     * @return Set contains same instance matcher
      */
     public static <T> Matcher<Set<T>> containsSameInstance(final T target) {
         return new BaseMatcher<Set<T>>() {
@@ -35,6 +35,32 @@ public final class CustomMatchers {
             @Override
             public void describeTo(Description description) {
                 description.appendText("not contains same instance");
+            }
+        };
+    }
+
+    /**
+     * Matcher that ensures a set contains a tree node with name.
+     *
+     * @return Set contains tree node with name matcher
+     */
+    public static Matcher<Set<TreeNode>> containsNodeWithName(final String name) {
+        return new BaseMatcher<Set<TreeNode>>() {
+            @Override
+            @SuppressWarnings(value = "unchecked")
+            public boolean matches(final Object item) {
+                for (final TreeNode treeNode : ((Set<TreeNode>)item)) {
+                    if (treeNode.getName().equals(name)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("not contains node with name ").appendValue(name);
             }
         };
     }
