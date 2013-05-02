@@ -531,6 +531,24 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testDeleteUserGroup_AccessRules() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        assertThat(document.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+        document.createAccessRuleForUserGroup(null, "/", "userGroupName", READ_ONLY, false);
+        assertThat(document.getRootTreeNode().getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+
+        // Test
+        document.deleteUserGroup("userGroupName");
+        assertThat(document.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
     public void testDeleteUserGroup_Groups() {
         final Document document = new Document();
 
