@@ -246,6 +246,8 @@ public final class Document {
     public void deleteRepository(final String repositoryName) {
         final Repository targetRepository = checkThatRepositoryExists(this, repositoryName);
 
+        TreeNode.deleteAllAccessRulesInTree(targetRepository.getRootTreeNode());
+
         repositories.remove(targetRepository);
     }
 

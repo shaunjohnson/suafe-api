@@ -438,6 +438,31 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testDeleteRepository_LevelAccessRules() {
+        final Document document = new Document();
+
+        // Setup
+        document.createRepository("repositoryName");
+        final User user = document.createUser("userName", null);
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        final AccessRule userAccessRule = document.createAccessRuleForUser("repositoryName", "foo/bar", "userName", READ_ONLY, false);
+        final AccessRule userGroupAccessRule = document.createAccessRuleForUserGroup("repositoryName", "foo/bar", "userGroupName", READ_ONLY, false);
+        assertThat(document.findAccessRuleForUserAtPath("repositoryName", "foo/bar", "userName"), is(notNullValue()));
+        assertThat(document.findAccessRuleForUserAtPath("repositoryName", "foo/bar", "userName"), is(sameInstance(userAccessRule)));
+        assertThat(document.findAccessRuleForUserGroupAtPath("repositoryName", "foo/bar", "userGroupName"), is(notNullValue()));
+        assertThat(document.findAccessRuleForUserGroupAtPath("repositoryName", "foo/bar", "userGroupName"), is(sameInstance(userGroupAccessRule)));
+        assertThat(user.getAccessRules(), containsSameInstance(userAccessRule));
+        assertThat(userGroup.getAccessRules(), containsSameInstance(userGroupAccessRule));
+
+        // Test
+        document.deleteRepository("repositoryName");
+        assertThat(document.findRepositoryByName("repositoryName"), is(nullValue()));
+
+        assertThat(user.getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
     public void testDeleteUser() {
         final Document document = new Document();
 
