@@ -5,7 +5,9 @@ package net.lmxm.suafe.api.internal;
  */
 public enum MessageKey {
     accessRuleForUserAlreadyExists,
+    accessRuleForUserDoesNotExist,
     accessRuleForUserGroupAlreadyExists,
+    accessRuleForUserGroupDoesNotExist,
     repositoryWithNameAlreadyExists,
     repositoryWithNameDoesNotExist,
     userGroupWithNameAlreadyExists,

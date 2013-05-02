@@ -1,5 +1,6 @@
 package net.lmxm.suafe.api.internal;
 
+import static net.lmxm.suafe.api.AccessLevel.READ_ONLY;
 import static net.lmxm.suafe.api.AccessLevel.READ_WRITE;
 import static net.lmxm.suafe.api.internal.DocumentPreconditions.*;
 
@@ -130,6 +131,66 @@ public final class DocumentPreconditionsTest {
         thrown.expectMessage(CoreMatchers.containsString("userGroupName"));
         thrown.expectMessage(CoreMatchers.containsString("foo/bar"));
         checkThatAccessRuleForUserGroupDoesNotExist(document.getRootTreeNode(), "foo/bar", userGroup);
+    }
+
+    @Test
+    public void testCheckThatAccessRuleForUserAlreadyExistsInvalidValues() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", null);
+
+        // Test
+        thrown.expect(EntityDoesNotExistException.class);
+        thrown.expectMessage(containsString("userName"));
+        thrown.expectMessage(containsString("foo/bar"));
+        checkThatAccessRuleForUserExists(document.getRootTreeNode(), "foo/bar", user);
+    }
+
+    @Test
+    public void testCheckThatAccessRuleForUserAlreadyExistsValidValues() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", null);
+        document.createAccessRuleForUser(null, "foo/bar", "userName", READ_ONLY, false);
+
+        // Test
+        final AccessRule accessRule = checkThatAccessRuleForUserExists(document.getRootTreeNode(), "foo/bar", user);
+        assertThat(accessRule, is(notNullValue()));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_ONLY)));
+        assertThat(accessRule.getUser(), is(sameInstance(user)));
+        assertThat(accessRule.isExclusion(), is(false));
+    }
+
+    @Test
+    public void testCheckThatAccessRuleForUserGroupAlreadyExistsInvalidValues() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+
+        // Test
+        thrown.expect(EntityDoesNotExistException.class);
+        thrown.expectMessage(containsString("userGroupName"));
+        thrown.expectMessage(containsString("foo/bar"));
+        checkThatAccessRuleForUserGroupExists(document.getRootTreeNode(), "foo/bar", userGroup);
+    }
+
+    @Test
+    public void testCheckThatAccessRuleForUserGroupAlreadyExistsValidValues() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        document.createAccessRuleForUserGroup(null, "foo/bar", "userGroupName", READ_ONLY, false);
+
+        // Test
+        final AccessRule accessRule = checkThatAccessRuleForUserGroupExists(document.getRootTreeNode(), "foo/bar", userGroup);
+        assertThat(accessRule, is(notNullValue()));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_ONLY)));
+        assertThat(accessRule.getUserGroup(), is(sameInstance(userGroup)));
+        assertThat(accessRule.isExclusion(), is(false));
     }
 
     @Test

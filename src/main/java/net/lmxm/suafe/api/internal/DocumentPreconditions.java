@@ -85,6 +85,40 @@ public final class DocumentPreconditions {
     }
 
     /**
+     * Checks that an access rule at the provided path for the provided user exists.
+     *
+     * @param treeNode Tree node to traverse
+     * @param path     Path of node to check
+     * @param user     User that is used to find a matching access rule
+     * @throws EntityDoesNotExistException When access rule at path for user does not exist
+     */
+    public static AccessRule checkThatAccessRuleForUserExists(final TreeNode treeNode, final String path, final User user) {
+        final AccessRule accessRule = TreeNode.findAccessRuleForUserAtPath(treeNode, path, user);
+        if (accessRule == null) {
+            throw new EntityDoesNotExistException(MessageKey.accessRuleForUserDoesNotExist, path, user.getName());
+        }
+
+        return accessRule;
+    }
+
+    /**
+     * Checks that an access rule at the provided path for the provided user group exists.
+     *
+     * @param treeNode Tree node to traverse
+     * @param path     Path of node to check
+     * @param userGroup     User group that is used to find a matching access rule
+     * @throws EntityDoesNotExistException When access rule at path for user group does not exist
+     */
+    public static AccessRule checkThatAccessRuleForUserGroupExists(final TreeNode treeNode, final String path, final UserGroup userGroup) {
+        final AccessRule accessRule = TreeNode.findAccessRuleForUserGroupAtPath(treeNode, path, userGroup);
+        if (accessRule == null) {
+            throw new EntityDoesNotExistException(MessageKey.accessRuleForUserGroupDoesNotExist, path, userGroup.getName());
+        }
+
+        return accessRule;
+    }
+
+    /**
      * Checks that a repository with this name does not exist.
      *
      * @param document       Document to check
