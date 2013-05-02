@@ -105,6 +105,10 @@ public final class Document {
         final UserGroup existingUserGroup = checkThatUserGroupWithNameExists(this, userGroupName);
         final UserGroup cloneUserGroup = createUserGroup(cloneUserGroupName);
 
+        for (final AccessRule  accessRule : existingUserGroup.getAccessRules()) {
+            accessRule.getTreeNode().createAccessRuleForUserGroup(cloneUserGroup, accessRule.getAccessLevel(), accessRule.isExclusion());
+        }
+
         for (final User userMember : existingUserGroup.getUserMembers()) {
             addUserToUserGroup(userMember.getName(), cloneUserGroupName);
         }
