@@ -140,6 +140,38 @@ public final class TreeNodeTest {
     }
 
     @Test
+    public void testDeleteAccessRuleForUser() {
+        final TreeNode treeNode = new TreeNode();
+        final User user = new User("userName", null);
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+
+        treeNode.createAccessRuleForUser(user, READ_WRITE, false);
+        assertThat(treeNode.getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+
+        treeNode.deleteAccessRuleForUser(user);
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
+    public void testDeleteAccessRuleForUserGroup() {
+        final TreeNode treeNode = new TreeNode();
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+
+        treeNode.createAccessRuleForUserGroup(userGroup, READ_WRITE, false);
+        assertThat(treeNode.getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+
+        treeNode.deleteAccessRuleForUserGroup(userGroup);
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
     public void testFindAccessRuleForUser() {
         // Setup
         final TreeNode rootNode = new TreeNode();
