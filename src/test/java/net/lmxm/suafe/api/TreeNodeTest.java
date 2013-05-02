@@ -20,6 +20,24 @@ public final class TreeNodeTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
+    public void testCreateAccessRuleForUser() {
+        final TreeNode treeNode = new TreeNode();
+        final User user = new User("userName", null);
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+
+        treeNode.createAccessRuleForUser(user, READ_WRITE, false);
+        assertThat(treeNode.getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+
+        final AccessRule accessRule = treeNode.getAccessRules().iterator().next();
+        assertThat(accessRule.getUser(), is(sameInstance(user)));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
+        assertThat(accessRule.isExclusion(), is(false));
+        assertThat(user.getAccessRules(), is(containsSameInstance(accessRule)));
+    }
+
+    @Test
     public void testCreateAccessRuleForUserShallow() {
         final TreeNode treeNode = new TreeNode();
         final User user = new User("userName", null);
@@ -59,6 +77,24 @@ public final class TreeNodeTest {
         assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
         assertThat(accessRule.isExclusion(), is(false));
         assertThat(user.getAccessRules(), is(containsSameInstance(accessRule)));
+    }
+
+    @Test
+    public void testCreateAccessRuleForUserGroup() {
+        final TreeNode treeNode = new TreeNode();
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+
+        treeNode.createAccessRuleForUserGroup(userGroup, READ_WRITE, false);
+        assertThat(treeNode.getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+
+        final AccessRule accessRule = treeNode.getAccessRules().iterator().next();
+        assertThat(accessRule.getUserGroup(), is(sameInstance(userGroup)));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
+        assertThat(accessRule.isExclusion(), is(false));
+        assertThat(userGroup.getAccessRules(), is(containsSameInstance(accessRule)));
     }
 
     @Test
