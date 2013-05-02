@@ -2,8 +2,8 @@ package net.lmxm.suafe.api;
 
 import net.lmxm.suafe.api.internal.ObjectToStringBuilder;
 
-import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentNotBlank;
 import static net.lmxm.suafe.api.internal.Objects.equal;
+import static net.lmxm.suafe.api.internal.Preconditions.checkArgumentNotBlank;
 
 /**
  * Represents a Subversion repository.
@@ -71,7 +71,7 @@ public final class Repository {
         }
 
         if (Repository.class.isInstance(object)) {
-            final Repository otherRepository = (Repository)object;
+            final Repository otherRepository = (Repository) object;
 
             return equal(name, otherRepository.name);
         }

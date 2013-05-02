@@ -1,6 +1,6 @@
 package net.lmxm.suafe.api.internal;
 
-import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentNotNull;
+import static net.lmxm.suafe.api.internal.Preconditions.checkArgumentNotNull;
 
 /**
  * Helper method used to build a toString() value.

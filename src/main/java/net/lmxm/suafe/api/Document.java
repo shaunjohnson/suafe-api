@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static net.lmxm.suafe.api.internal.DocumentPreconditions.*;
+import static net.lmxm.suafe.api.internal.Preconditions.*;
 
 public final class Document {
     /**
@@ -87,7 +87,7 @@ public final class Document {
             addUserToUserGroup(cloneUserName, userGroup.getName());
         }
 
-        for (final AccessRule  accessRule : existingUser.getAccessRules()) {
+        for (final AccessRule accessRule : existingUser.getAccessRules()) {
             accessRule.getTreeNode().createAccessRuleForUser(cloneUser, accessRule.getAccessLevel(), accessRule.isExclusion());
         }
 
@@ -105,7 +105,7 @@ public final class Document {
         final UserGroup existingUserGroup = checkThatUserGroupWithNameExists(this, userGroupName);
         final UserGroup cloneUserGroup = createUserGroup(cloneUserGroupName);
 
-        for (final AccessRule  accessRule : existingUserGroup.getAccessRules()) {
+        for (final AccessRule accessRule : existingUserGroup.getAccessRules()) {
             accessRule.getTreeNode().createAccessRuleForUserGroup(cloneUserGroup, accessRule.getAccessLevel(), accessRule.isExclusion());
         }
 
@@ -319,7 +319,7 @@ public final class Document {
      *
      * @param repositoryName Name of the repository to which the access rule applies
      * @param path           Path of tree node to find
-     * @param userGroupName       Name of user group that is used to find a matching access rule
+     * @param userGroupName  Name of user group that is used to find a matching access rule
      * @return Access that applies to the specified user group
      */
     public AccessRule findAccessRuleForUserGroupAtPath(final String repositoryName, final String path, final String userGroupName) {

@@ -1,6 +1,5 @@
 package net.lmxm.suafe.api;
 
-import net.lmxm.suafe.api.internal.DocumentPreconditions;
 import net.lmxm.suafe.api.internal.ObjectToStringBuilder;
 import net.lmxm.suafe.api.internal.Objects;
 
@@ -8,8 +7,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentNotBlank;
 import static net.lmxm.suafe.api.internal.Objects.equal;
+import static net.lmxm.suafe.api.internal.Preconditions.checkArgumentNotBlank;
 
 /**
  * User information.
@@ -38,7 +37,7 @@ public final class User {
     /**
      * Construct a user with the provided name and optional alias.
      *
-     * @param name Name of the user
+     * @param name  Name of the user
      * @param alias Optional alias of the user
      */
     protected User(final String name, final String alias) {
@@ -118,7 +117,7 @@ public final class User {
      * @param userGroup User group to remove
      * @return true if the user group was removed, otherwise false
      */
-    protected  boolean removeUserGroup(final UserGroup userGroup) {
+    protected boolean removeUserGroup(final UserGroup userGroup) {
         return userGroups.remove(userGroup);
     }
 
@@ -156,7 +155,7 @@ public final class User {
         }
 
         if (User.class.isInstance(object)) {
-            final User otherUser = (User)object;
+            final User otherUser = (User) object;
 
             return equal(name, otherUser.name) && equal(alias, otherUser.alias);
         }
@@ -167,6 +166,6 @@ public final class User {
 
     @Override
     public String toString() {
-        return new ObjectToStringBuilder(this.getClass()).append("name", name).append("alias",  alias).build();
+        return new ObjectToStringBuilder(this.getClass()).append("name", name).append("alias", alias).build();
     }
 }

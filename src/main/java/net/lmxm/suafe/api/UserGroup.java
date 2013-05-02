@@ -1,14 +1,13 @@
 package net.lmxm.suafe.api;
 
 import net.lmxm.suafe.api.internal.ObjectToStringBuilder;
-import net.lmxm.suafe.api.internal.Objects;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentNotBlank;
 import static net.lmxm.suafe.api.internal.Objects.equal;
+import static net.lmxm.suafe.api.internal.Preconditions.checkArgumentNotBlank;
 
 /**
  * User group consisting of one or more users and/or user groups.
@@ -111,7 +110,7 @@ public final class UserGroup {
      * @param userGroup User group to remove
      * @return true if the user group was removed, otherwise false
      */
-    protected  boolean removeUserGroup(final UserGroup userGroup) {
+    protected boolean removeUserGroup(final UserGroup userGroup) {
         return userGroups.remove(userGroup);
     }
 
@@ -198,7 +197,7 @@ public final class UserGroup {
         }
 
         if (UserGroup.class.isInstance(object)) {
-            final UserGroup otherUserGroup = (UserGroup)object;
+            final UserGroup otherUserGroup = (UserGroup) object;
 
             return equal(name, otherUserGroup.name);
         }

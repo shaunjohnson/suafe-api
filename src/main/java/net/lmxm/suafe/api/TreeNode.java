@@ -4,7 +4,7 @@ import net.lmxm.suafe.api.internal.ObjectToStringBuilder;
 
 import java.util.*;
 
-import static net.lmxm.suafe.api.internal.DocumentPreconditions.*;
+import static net.lmxm.suafe.api.internal.Preconditions.*;
 
 /**
  * Tree node representing a single node in a tree. Each node contains references to all access rules that apply to that
