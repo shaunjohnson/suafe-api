@@ -124,14 +124,9 @@ public final class Document {
      */
     public boolean createAccessRuleForUser(final String repositoryName, final String path, final String userName, final AccessLevel accessLevel, final boolean exclusion) {
         final User user = checkThatUserWithNameExists(this, userName);
+        final TreeNode treeNode = getApplicableRootTreeNode(repositoryName);
 
-        if (isBlank(repositoryName)) {
-            return TreeNode.createAccessRuleForUser(rootTreeNode, path, user, accessLevel, exclusion);
-        }
-        else {
-            final Repository repository = checkThatRepositoryExists(this, repositoryName);
-            return TreeNode.createAccessRuleForUser(repository.getRootTreeNode(), path, user, accessLevel, exclusion);
-        }
+        return TreeNode.createAccessRuleForUser(treeNode, path, user, accessLevel, exclusion);
     }
 
     /**
@@ -146,14 +141,9 @@ public final class Document {
      */
     public boolean createAccessRuleForUserGroup(final String repositoryName, final String path, final String userGroupName, final AccessLevel accessLevel, final boolean exclusion) {
         final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+        final TreeNode treeNode = getApplicableRootTreeNode(repositoryName);
 
-        if (isBlank(repositoryName)) {
-            return TreeNode.createAccessRuleForUserGroup(rootTreeNode, path, userGroup, accessLevel, exclusion);
-        }
-        else {
-            final Repository repository = checkThatRepositoryExists(this, repositoryName);
-            return TreeNode.createAccessRuleForUserGroup(repository.getRootTreeNode(), path, userGroup, accessLevel, exclusion);
-        }
+        return TreeNode.createAccessRuleForUserGroup(treeNode, path, userGroup, accessLevel, exclusion);
     }
 
     /**
@@ -271,14 +261,9 @@ public final class Document {
      */
     public AccessRule findAccessRuleForUserAtPath(final String repositoryName, final String path, final String userName) {
         final User user = checkThatUserWithNameExists(this, userName);
+        final TreeNode treeNode = getApplicableRootTreeNode(repositoryName);
 
-        if (isBlank(repositoryName)) {
-            return TreeNode.findAccessRuleForUserAtPath(rootTreeNode, path, user);
-        }
-        else {
-            final Repository repository = checkThatRepositoryExists(this, repositoryName);
-            return TreeNode.findAccessRuleForUserAtPath(repository.getRootTreeNode(), path, user);
-        }
+        return TreeNode.findAccessRuleForUserAtPath(treeNode, path, user);
     }
 
     /**
@@ -291,14 +276,9 @@ public final class Document {
      */
     public AccessRule findAccessRuleForUserGroupAtPath(final String repositoryName, final String path, final String userGroupName) {
         final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+        final TreeNode treeNode = getApplicableRootTreeNode(repositoryName);
 
-        if (isBlank(repositoryName)) {
-            return TreeNode.findAccessRuleForUserGroupAtPath(rootTreeNode, path, userGroup);
-        }
-        else {
-            final Repository repository = checkThatRepositoryExists(this, repositoryName);
-            return TreeNode.findAccessRuleForUserGroupAtPath(repository.getRootTreeNode(), path, userGroup);
-        }
+        return TreeNode.findAccessRuleForUserGroupAtPath(treeNode, path, userGroup);
     }
 
     /**
@@ -371,6 +351,22 @@ public final class Document {
         }
 
         return null;
+    }
+
+    /**
+     * Gets the applicable root tree node, depending on whether repository name is provided or not. If repository name
+     * is blank then the server wide root tree node is returned, otherwise the repository root tree node is returned.
+     *
+     * @param repositoryName Name of the repository
+     * @return Applicable tree node object
+     */
+    private TreeNode getApplicableRootTreeNode(final String repositoryName) {
+        if (isBlank(repositoryName)) {
+            return rootTreeNode;
+        }
+        else {
+            return checkThatRepositoryExists(this, repositoryName).getRootTreeNode();
+        }
     }
 
     /**
