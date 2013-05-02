@@ -200,6 +200,36 @@ public final class Document {
     }
 
     /**
+     * Deletes an existing access rule for the specified repository and user.
+     *
+     * @param repositoryName Name of the repository to which the access rule applies. If null the access rule applies to all repositories
+     * @param path           Path to which the rule applies
+     * @param userName       Name of user to which the rule applies
+     * @return True if the access rule is deleted, otherwise false
+     */
+    public boolean deleteAccessRuleForUser(final String repositoryName, final String path, final String userName) {
+        final User user = checkThatUserWithNameExists(this, userName);
+        final TreeNode treeNode = getApplicableRootTreeNode(repositoryName);
+
+        return TreeNode.deleteAccessRuleForUser(treeNode, path, user);
+    }
+
+    /**
+     * Deletes an existing access rule for the specified repository and user group.
+     *
+     * @param repositoryName Name of the repository to which the access rule applies. If null the access rule applies to all repositories
+     * @param path           Path to which the rule applies
+     * @param userGroupName  Name of user group to which this rule applies
+     * @return True if the access rule is deleted, otherwise false
+     */
+    public boolean deleteAccessRuleForUserGroup(final String repositoryName, final String path, final String userGroupName) {
+        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+        final TreeNode treeNode = getApplicableRootTreeNode(repositoryName);
+
+        return TreeNode.deleteAccessRuleForUserGroup(treeNode, path, userGroup);
+    }
+
+    /**
      * Deletes an existing repository with the provided name.
      *
      * @param repositoryName Name of the repository to delete

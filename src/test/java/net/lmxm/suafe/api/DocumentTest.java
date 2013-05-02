@@ -293,6 +293,84 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testDeleteAccessRuleForUser() {
+        final Document document = new Document();
+
+        // Setup
+        final Repository repository = document.createRepository("repositoryName");
+        final User user = document.createUser("userName", null);
+        assertThat(repository.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+
+        // Test
+        document.createAccessRuleForUser("repositoryName", "/", "userName", READ_WRITE, false);
+        assertThat(repository.getRootTreeNode().getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+
+        document.deleteAccessRuleForUser("repositoryName", "/", "userName");
+        assertThat(repository.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
+    public void testDeleteAccessRuleForUserServerWide() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", null);
+        assertThat(document.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+
+        // Test
+        document.createAccessRuleForUser(null, "/", "userName", READ_WRITE, false);
+        assertThat(document.getRootTreeNode().getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+
+        document.deleteAccessRuleForUser(null, "/", "userName");
+        assertThat(document.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
+    public void testDeleteAccessRuleForUserGroup() {
+        final Document document = new Document();
+
+        // Setup
+        final Repository repository = document.createRepository("repositoryName");
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        assertThat(repository.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+
+        // Test
+        document.createAccessRuleForUserGroup("repositoryName", "/", "userGroupName", READ_WRITE, false);
+        assertThat(repository.getRootTreeNode().getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+
+        document.deleteAccessRuleForUserGroup("repositoryName", "/", "userGroupName");
+        assertThat(repository.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
+    public void testDeleteAccessRuleForUserGroupServerWide() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        assertThat(document.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+
+        // Test
+        document.createAccessRuleForUserGroup(null, "/", "userGroupName", READ_WRITE, false);
+        assertThat(document.getRootTreeNode().getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+
+        document.deleteAccessRuleForUserGroup(null, "/", "userGroupName");
+        assertThat(document.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
     public void testDeleteRepository() {
         final Document document = new Document();
 
