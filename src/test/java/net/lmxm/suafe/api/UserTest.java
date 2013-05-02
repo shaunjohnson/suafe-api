@@ -165,4 +165,10 @@ public final class UserTest {
     public void testEqualsContract() {
         EqualsVerifier.forClass(User.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
+
+    @Test
+    public void testToString() {
+        assertThat(new User("userName", "userAlias").toString(), is(equalTo("[User: name=userName, alias=userAlias]")));
+        assertThat(new User("userName", null).toString(), is(equalTo("[User: name=userName, alias=<null>]")));
+    }
 }

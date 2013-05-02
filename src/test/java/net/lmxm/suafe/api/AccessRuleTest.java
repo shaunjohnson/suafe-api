@@ -62,4 +62,13 @@ public final class AccessRuleTest {
         accessRule.setExclusion(true);
         assertThat(accessRule.isExclusion(), is(true));
     }
+
+    @Test
+    public void testToString() {
+        final AccessRule userAccessRule = new AccessRule(new TreeNode(), new User("userName", null), READ_WRITE, false);
+        assertThat(userAccessRule.toString(), is(equalTo("[AccessRule: user=[User: name=userName, alias=<null>], userGroup=<null>, accessLevel=READ_WRITE, exclusion=false]")));
+
+        final AccessRule userGroupAccessRule = new AccessRule(new TreeNode(), new UserGroup("userGroupName"), READ_WRITE, false);
+        assertThat(userGroupAccessRule.toString(), is(equalTo("[AccessRule: user=<null>, userGroup=[UserGroup: name=userGroupName], accessLevel=READ_WRITE, exclusion=false]")));
+    }
 }

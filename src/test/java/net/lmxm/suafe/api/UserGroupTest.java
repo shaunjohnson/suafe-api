@@ -239,4 +239,9 @@ public final class UserGroupTest {
     public void testEqualsContract() {
         EqualsVerifier.forClass(User.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
+
+    @Test
+    public void testToString() {
+        assertThat(new UserGroup("userGroupName").toString(), is(equalTo("[UserGroup: name=userGroupName]")));
+    }
 }

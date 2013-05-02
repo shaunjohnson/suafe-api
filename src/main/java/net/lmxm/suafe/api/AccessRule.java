@@ -1,5 +1,7 @@
 package net.lmxm.suafe.api;
 
+import net.lmxm.suafe.api.internal.ObjectToStringBuilder;
+
 /**
  * Access rule for a user or user group.
  */
@@ -32,7 +34,7 @@ public final class AccessRule {
     /**
      * Constructs an access rule for a user.
      *
-     * @param treeNode Tree node where this access rule resides
+     * @param treeNode    Tree node where this access rule resides
      * @param user        User to which the rule applies
      * @param accessLevel Level of access to apply to the user
      * @param exclusion   Indicates that the rule applies to all users that is not this user
@@ -48,7 +50,7 @@ public final class AccessRule {
     /**
      * Constructs an access rule for a user group.
      *
-     * @param treeNode Tree node where this access rule resides
+     * @param treeNode    Tree node where this access rule resides
      * @param userGroup   User group to which the rule applies
      * @param accessLevel Level of access to apply to the user group
      * @param exclusion   Indicates that the rule applies to all users that are not in this user group
@@ -122,5 +124,11 @@ public final class AccessRule {
      */
     public TreeNode getTreeNode() {
         return treeNode;
+    }
+
+    @Override
+    public String toString() {
+        return new ObjectToStringBuilder(this.getClass()).append("user", user).append("userGroup", userGroup)
+                .append("accessLevel", accessLevel).append("exclusion", exclusion).build();
     }
 }

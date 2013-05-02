@@ -1,6 +1,7 @@
 package net.lmxm.suafe.api;
 
 import net.lmxm.suafe.api.internal.DocumentPreconditions;
+import net.lmxm.suafe.api.internal.ObjectToStringBuilder;
 import net.lmxm.suafe.api.internal.Objects;
 
 import java.util.Collections;
@@ -162,5 +163,10 @@ public final class User {
         else {
             return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return new ObjectToStringBuilder(this.getClass()).append("name", name).append("alias",  alias).build();
     }
 }

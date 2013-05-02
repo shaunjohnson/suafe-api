@@ -362,4 +362,10 @@ public final class TreeNodeTest {
         assertThat(parts.pop(), is(equalTo("foo")));
         assertThat(parts.pop(), is(equalTo("bar")));
     }
+
+    @Test
+    public void testToString() {
+        assertThat(new TreeNode().toString(), is(equalTo("[TreeNode: name=" + ROOT_NODE_NAME + ", isRoot=true]")));
+        assertThat(new TreeNode("treeNodeName", new TreeNode()).toString(), is(equalTo("[TreeNode: name=treeNodeName, isRoot=false]")));
+    }
 }

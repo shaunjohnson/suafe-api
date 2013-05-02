@@ -1,5 +1,7 @@
 package net.lmxm.suafe.api;
 
+import net.lmxm.suafe.api.internal.ObjectToStringBuilder;
+
 import java.util.*;
 
 import static net.lmxm.suafe.api.internal.DocumentPreconditions.*;
@@ -365,5 +367,10 @@ public final class TreeNode {
         final LinkedList<String> linkedList = new LinkedList<String>();
         Collections.addAll(linkedList, path.split("/"));
         return linkedList;
+    }
+
+    @Override
+    public String toString() {
+        return new ObjectToStringBuilder(this.getClass()).append("name", name).append("isRoot", getParent() == null).build();
     }
 }

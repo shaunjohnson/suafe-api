@@ -1,5 +1,7 @@
 package net.lmxm.suafe.api;
 
+import net.lmxm.suafe.api.internal.ObjectToStringBuilder;
+
 import static net.lmxm.suafe.api.internal.DocumentPreconditions.checkArgumentNotBlank;
 import static net.lmxm.suafe.api.internal.Objects.equal;
 
@@ -76,5 +78,10 @@ public final class Repository {
         else {
             return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return new ObjectToStringBuilder(this.getClass()).append("name", name).build();
     }
 }

@@ -69,4 +69,9 @@ public final class RepositoryTest {
     public void testEqualsContract() {
         EqualsVerifier.forClass(User.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
+
+    @Test
+    public void testToString() {
+        assertThat(new Repository("repositoryName").toString(), is(equalTo("[Repository: name=repositoryName]")));
+    }
 }
