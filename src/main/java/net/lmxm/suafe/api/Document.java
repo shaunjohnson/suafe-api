@@ -87,6 +87,10 @@ public final class Document {
             addUserToUserGroup(cloneUserName, userGroup.getName());
         }
 
+        for (final AccessRule  accessRule : existingUser.getAccessRules()) {
+            accessRule.getTreeNode().createAccessRuleForUser(cloneUser, accessRule.getAccessLevel(), accessRule.isExclusion());
+        }
+
         return cloneUser;
     }
 

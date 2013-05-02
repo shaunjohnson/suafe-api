@@ -77,6 +77,31 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testCloneUser_AccessRules() {
+        final Document document = new Document();
+        final TreeNode treeNode = document.getRootTreeNode();
+
+        // Setup
+        final User user = document.createUser("userName", "userAlias");
+        document.createAccessRuleForUser(null, "/", "userName", READ_ONLY, false);
+        final AccessRule userAccessRule = treeNode.findAccessRuleForUser(user);
+        assertThat(userAccessRule, is(notNullValue()));
+        assertThat(userAccessRule.getUser(), is(equalTo(user)));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(containsSameInstance(userAccessRule)));
+
+        // Test
+        final User cloneUser = document.cloneUser("userName", "cloneUserName", "cloneUserAlias");
+        final AccessRule cloneUserAccessRule = treeNode.findAccessRuleForUser(cloneUser);
+        assertThat(cloneUserAccessRule, is(notNullValue()));
+        assertThat(cloneUserAccessRule.getUser(), is(equalTo(cloneUser)));
+        assertThat(cloneUser.getAccessRules(), is(not(emptySet())));
+        assertThat(cloneUser.getAccessRules(), is(containsSameInstance(cloneUserAccessRule)));
+
+        assertThat(cloneUserAccessRule, is(not(sameInstance(userAccessRule))));
+    }
+
+    @Test
     public void testCloneUser_Groups() {
         final Document document = new Document();
 
