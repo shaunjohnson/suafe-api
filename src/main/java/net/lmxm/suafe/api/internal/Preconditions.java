@@ -14,6 +14,11 @@ public final class Preconditions {
     private static final Pattern VALID_PATH_PATTERN = Pattern.compile("^(/)|([^/=]+(/[^/=]+)*)$");
 
     /**
+     * Regular expression pattern representing a valid repository name.
+     */
+    private static final Pattern VALID_REPOSITORY_NAME_PATTERN = Pattern.compile("^[^:]+$");
+
+    /**
      * Regular expression pattern representing a valid user alias.
      */
     private static final Pattern VALID_USER_ALIAS_PATTERN = Pattern.compile("^[^=]+$");
@@ -252,6 +257,25 @@ public final class Preconditions {
         }
 
         return userGroup;
+    }
+
+    /**
+     * Checks if the provided repository name is valid.
+     *
+     * @param repositoryName Repository name to validate
+     * @return Validated repository name
+     * @throws InvalidEntityNameException When repository name is deemed invalid
+     */
+    public static String checkRepositoryName(final String repositoryName) {
+        if (isBlank(repositoryName)) {
+            throw new InvalidEntityNameException(MessageKey.repositoryNameIsBlank, repositoryName);
+        }
+
+        if (!VALID_REPOSITORY_NAME_PATTERN.matcher(repositoryName).matches()) {
+            throw new InvalidEntityNameException(MessageKey.repositoryNameIsInvalid, repositoryName);
+        }
+
+        return repositoryName;
     }
 
     /**

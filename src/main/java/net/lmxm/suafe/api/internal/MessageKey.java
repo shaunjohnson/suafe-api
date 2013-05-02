@@ -8,6 +8,8 @@ public enum MessageKey {
     accessRuleForUserDoesNotExist,
     accessRuleForUserGroupAlreadyExists,
     accessRuleForUserGroupDoesNotExist,
+    repositoryNameIsBlank,
+    repositoryNameIsInvalid,
     repositoryWithNameAlreadyExists,
     repositoryWithNameDoesNotExist,
     userGroupWithNameAlreadyExists,

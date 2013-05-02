@@ -336,7 +336,7 @@ public final class Document {
      * @return Matching repository or null if not found
      */
     public Repository findRepositoryByName(final String repositoryName) {
-        checkArgumentNotBlank(repositoryName, "Repository name");
+        checkRepositoryName(repositoryName);
 
         for (final Repository repository : repositories) {
             if (repository.getName().equals(repositoryName)) {

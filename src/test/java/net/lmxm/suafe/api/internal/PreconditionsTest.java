@@ -115,6 +115,44 @@ public final class PreconditionsTest {
     }
 
     @Test
+    public void testCheckRepositoryNameNullValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("name"));
+        checkRepositoryName(null);
+    }
+
+    @Test
+    public void testCheckRepositoryNameEmptyValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("name"));
+        checkRepositoryName("");
+    }
+
+    @Test
+    public void testCheckRepositoryNameBlankValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("name"));
+        checkRepositoryName("    ");
+    }
+
+    @Test
+    public void testCheckRepositoryNameInvalidValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("invalid"));
+        thrown.expectMessage(containsString("name"));
+        checkRepositoryName("abc:abc");
+    }
+
+    @Test
+    public void testCheckRepositoryNameValidValues() {
+        checkRepositoryName("abcd");
+        checkRepositoryName("a123");
+    }
+
+    @Test
     public void testCheckThatAccessRuleForUserDoesNotExist() {
         final Document document = new Document();
 
