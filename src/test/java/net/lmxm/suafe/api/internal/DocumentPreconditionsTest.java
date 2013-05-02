@@ -109,7 +109,7 @@ public final class DocumentPreconditionsTest {
         final User user = document.createUser("userName", null);
 
         checkThatAccessRuleForUserDoesNotExist(document.getRootTreeNode(), "foo/bar", user);
-        document.addAccessRuleForUser(null, "foo/bar", "userName", READ_WRITE, false);
+        document.createAccessRuleForUser(null, "foo/bar", "userName", READ_WRITE, false);
 
         thrown.expect(EntityAlreadyExistsException.class);
         thrown.expectMessage(CoreMatchers.containsString("userName"));
@@ -124,7 +124,7 @@ public final class DocumentPreconditionsTest {
         final UserGroup userGroup = document.createUserGroup("userGroupName");
 
         checkThatAccessRuleForUserGroupDoesNotExist(document.getRootTreeNode(), "foo/bar", userGroup);
-        document.addAccessRuleForUserGroup(null, "foo/bar", "userGroupName", READ_WRITE, false);
+        document.createAccessRuleForUserGroup(null, "foo/bar", "userGroupName", READ_WRITE, false);
 
         thrown.expect(EntityAlreadyExistsException.class);
         thrown.expectMessage(CoreMatchers.containsString("userGroupName"));

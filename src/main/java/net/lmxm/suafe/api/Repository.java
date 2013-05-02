@@ -54,7 +54,7 @@ public final class Repository {
     }
 
     /**
-     * Adds a new access rule for the user, with the access level and exclusion value.
+     * Creates a new access rule for the user, with the access level and exclusion value.
      *
      * @param path        Path to which the new rule applies
      * @param user        User to which this rule applies
@@ -62,12 +62,12 @@ public final class Repository {
      * @param exclusion   Indicates if this rule applies to all users that are not the provided user
      * @return True if the access rule is added, otherwise false
      */
-    protected boolean addAccessRuleForUser(final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
-        return TreeNode.addAccessRuleForUser(rootTreeNode, path, user, accessLevel, exclusion);
+    protected boolean createAccessRuleForUser(final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
+        return TreeNode.createAccessRuleForUser(rootTreeNode, path, user, accessLevel, exclusion);
     }
 
     /**
-     * Adds a new access rule for the user group, with the access level and exclusion value.
+     * Creates a new access rule for the user group, with the access level and exclusion value.
      *
      * @param path        Path to which the new rule applies
      * @param userGroup   User group to which this rule applies
@@ -75,8 +75,8 @@ public final class Repository {
      * @param exclusion   Indicates if this rule applies to all users that are not in the provided user group
      * @return True if the access rule is added, otherwise false
      */
-    protected boolean addAccessRuleForUserGroup(final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
-        return TreeNode.addAccessRuleForUserGroup(rootTreeNode, path, userGroup, accessLevel, exclusion);
+    protected boolean createAccessRuleForUserGroup(final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
+        return TreeNode.createAccessRuleForUserGroup(rootTreeNode, path, userGroup, accessLevel, exclusion);
     }
 
     @Override

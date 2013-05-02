@@ -28,50 +28,6 @@ public final class Document {
     private Set<UserGroup> userGroups = new HashSet<UserGroup>();
 
     /**
-     * Adds a new access rule for the specified repository and user, with the provided access level and exclusion value.
-     *
-     * @param repositoryName Name of the repository to which the access rule applies. If null the access rule applies to all repositories
-     * @param path           Path to which the new rule applies
-     * @param userName       Name of user to which this rule applies
-     * @param accessLevel    Level of access to apply
-     * @param exclusion      Indicates if this rule applies to all users that are not in the provided user group
-     * @return True if the access rule is added, otherwise false
-     */
-    public boolean addAccessRuleForUser(final String repositoryName, final String path, final String userName, final AccessLevel accessLevel, final boolean exclusion) {
-        final User user = checkThatUserWithNameExists(this, userName);
-
-        if (isBlank(repositoryName)) {
-            return TreeNode.addAccessRuleForUser(rootTreeNode, path, user, accessLevel, exclusion);
-        }
-        else {
-            final Repository repository = checkThatRepositoryExists(this, repositoryName);
-            return repository.addAccessRuleForUser(path, user, accessLevel, exclusion);
-        }
-    }
-
-    /**
-     * Adds a new access rule for the specified repository and user, with the provided access level and exclusion value.
-     *
-     * @param repositoryName Name of the repository to which the access rule applies. If null the access rule applies to all repositories
-     * @param path           Path to which the new rule applies
-     * @param userGroupName  Name of user group to which this rule applies
-     * @param accessLevel    Level of access to apply
-     * @param exclusion      Indicates if this rule applies to all users that are not in the provided user group
-     * @return True if the access rule is added, otherwise false
-     */
-    public boolean addAccessRuleForUserGroup(final String repositoryName, final String path, final String userGroupName, final AccessLevel accessLevel, final boolean exclusion) {
-        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
-
-        if (isBlank(repositoryName)) {
-            return TreeNode.addAccessRuleForUserGroup(rootTreeNode, path, userGroup, accessLevel, exclusion);
-        }
-        else {
-            final Repository repository = checkThatRepositoryExists(this, repositoryName);
-            return repository.addAccessRuleForUserGroup(path, userGroup, accessLevel, exclusion);
-        }
-    }
-
-    /**
      * Adds a user to a user group.
      *
      * @param userName            Name of user to add to user group
@@ -154,6 +110,50 @@ public final class Document {
         }
 
         return cloneUserGroup;
+    }
+
+    /**
+     * Creates a new access rule for the specified repository and user, with the provided access level and exclusion value.
+     *
+     * @param repositoryName Name of the repository to which the access rule applies. If null the access rule applies to all repositories
+     * @param path           Path to which the new rule applies
+     * @param userName       Name of user to which this rule applies
+     * @param accessLevel    Level of access to apply
+     * @param exclusion      Indicates if this rule applies to all users that are not in the provided user group
+     * @return True if the access rule is added, otherwise false
+     */
+    public boolean createAccessRuleForUser(final String repositoryName, final String path, final String userName, final AccessLevel accessLevel, final boolean exclusion) {
+        final User user = checkThatUserWithNameExists(this, userName);
+
+        if (isBlank(repositoryName)) {
+            return TreeNode.createAccessRuleForUser(rootTreeNode, path, user, accessLevel, exclusion);
+        }
+        else {
+            final Repository repository = checkThatRepositoryExists(this, repositoryName);
+            return repository.createAccessRuleForUser(path, user, accessLevel, exclusion);
+        }
+    }
+
+    /**
+     * Creates a new access rule for the specified repository and user, with the provided access level and exclusion value.
+     *
+     * @param repositoryName Name of the repository to which the access rule applies. If null the access rule applies to all repositories
+     * @param path           Path to which the new rule applies
+     * @param userGroupName  Name of user group to which this rule applies
+     * @param accessLevel    Level of access to apply
+     * @param exclusion      Indicates if this rule applies to all users that are not in the provided user group
+     * @return True if the access rule is added, otherwise false
+     */
+    public boolean createAccessRuleForUserGroup(final String repositoryName, final String path, final String userGroupName, final AccessLevel accessLevel, final boolean exclusion) {
+        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+
+        if (isBlank(repositoryName)) {
+            return TreeNode.createAccessRuleForUserGroup(rootTreeNode, path, userGroup, accessLevel, exclusion);
+        }
+        else {
+            final Repository repository = checkThatRepositoryExists(this, repositoryName);
+            return repository.createAccessRuleForUserGroup(path, userGroup, accessLevel, exclusion);
+        }
     }
 
     /**
