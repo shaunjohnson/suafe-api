@@ -480,6 +480,24 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testDeleteUser_AccessRules() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", null);
+        assertThat(document.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+        document.createAccessRuleForUser(null, "/", "userName", READ_ONLY, false);
+        assertThat(document.getRootTreeNode().getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+
+        // Test
+        document.deleteUser("userName");
+        assertThat(document.getRootTreeNode().getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
     public void testDeleteUser_Groups() {
         final Document document = new Document();
 

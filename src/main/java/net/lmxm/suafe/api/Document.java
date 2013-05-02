@@ -264,6 +264,10 @@ public final class Document {
             removeUserFromUserGroup(targetUserName, userGroup.getName());
         }
 
+        for (final AccessRule accessRule : targetUser.getAccessRules()) {
+            accessRule.getTreeNode().deleteAccessRuleForUser(targetUser);
+        }
+
         users.remove(targetUser);
     }
 
