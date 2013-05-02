@@ -325,6 +325,44 @@ public final class PreconditionsTest {
     }
 
     @Test
+    public void testCheckUserNameNullValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("name"));
+        checkUserName(null);
+    }
+
+    @Test
+    public void testCheckUserNameEmptyValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("name"));
+        checkUserName("");
+    }
+
+    @Test
+    public void testCheckUserNameBlankValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("name"));
+        checkUserName("    ");
+    }
+
+    @Test
+    public void testCheckUserNameInvalidValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("invalid"));
+        thrown.expectMessage(containsString("name"));
+        checkUserName("abc=abc");
+    }
+
+    @Test
+    public void testCheckUserNameValidValues() {
+        checkUserName("abcd");
+        checkUserName("a123");
+    }
+
+    @Test
     public void testEqual() {
         assertThat(equal(null, null), is(true));
         assertThat(equal("foobar", "foobar"), is(true));

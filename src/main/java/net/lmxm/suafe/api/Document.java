@@ -354,7 +354,7 @@ public final class Document {
      * @return Matching user or null if not found
      */
     public User findUserByName(final String userName) {
-        checkArgumentNotBlank(userName, "User name");
+        checkUserName(userName);
 
         for (final User user : users) {
             if (user.getName().equals(userName)) {

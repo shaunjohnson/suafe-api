@@ -14,6 +14,11 @@ public final class Preconditions {
     private static final Pattern VALID_PATH_PATTERN = Pattern.compile("^(/)|([^/=]+(/[^/=]+)*)$");
 
     /**
+     * Regular expression pattern representing a valid user name.
+     */
+    private static final Pattern VALID_USER_NAME_PATTERN = Pattern.compile("^[^=]+$");
+
+    /**
      * Checks if the provided argument is blank.
      *
      * @param argument  Argument to check
@@ -237,6 +242,25 @@ public final class Preconditions {
         }
 
         return userGroup;
+    }
+
+    /**
+     * Checks if the provided user name is valid.
+     *
+     * @param userName User name to validate
+     * @return Validated user name
+     * @throws InvalidEntityNameException When user name is deemed invalid
+     */
+    public static String checkUserName(final String userName) {
+        if (isBlank(userName)) {
+            throw new InvalidEntityNameException(MessageKey.userNameIsBlank, userName);
+        }
+
+        if (!VALID_USER_NAME_PATTERN.matcher(userName).matches()) {
+            throw new InvalidEntityNameException(MessageKey.userNameIsInvalid, userName);
+        }
+
+        return userName;
     }
 
     /**
