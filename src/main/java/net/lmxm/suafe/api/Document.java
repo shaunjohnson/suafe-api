@@ -130,7 +130,7 @@ public final class Document {
         }
         else {
             final Repository repository = checkThatRepositoryExists(this, repositoryName);
-            return repository.createAccessRuleForUser(path, user, accessLevel, exclusion);
+            return TreeNode.createAccessRuleForUser(repository.getRootTreeNode(), path, user, accessLevel, exclusion);
         }
     }
 
@@ -152,7 +152,7 @@ public final class Document {
         }
         else {
             final Repository repository = checkThatRepositoryExists(this, repositoryName);
-            return repository.createAccessRuleForUserGroup(path, userGroup, accessLevel, exclusion);
+            return TreeNode.createAccessRuleForUserGroup(repository.getRootTreeNode(), path, userGroup, accessLevel, exclusion);
         }
     }
 

@@ -42,42 +42,6 @@ public final class RepositoryTest {
     }
 
     @Test
-    public void testCreateAccessRuleForUser() {
-        assertThat(Repository.class, is(protectedMethod("createAccessRuleForUser")));
-
-        final Repository repository = new Repository("repositoryName");
-        final TreeNode rootTreeNode = repository.getRootTreeNode();
-        assertThat(rootTreeNode.getAccessRules(), is(emptySet()));
-
-        final User user  = new User("userName", null);
-        repository.createAccessRuleForUser("/", user, READ_WRITE, false);
-        assertThat(rootTreeNode.getAccessRules().size(), is(equalTo(1)));
-
-        final AccessRule accessRule = rootTreeNode.getAccessRules().iterator().next();
-        assertThat(accessRule.getUser(), is(sameInstance(user)));
-        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
-        assertThat(accessRule.isExclusion(), is(false));
-    }
-
-    @Test
-    public void testCreateAccessRuleForUserGroup() {
-        assertThat(Repository.class, is(protectedMethod("createAccessRuleForUserGroup")));
-
-        final Repository repository = new Repository("repositoryName");
-        final TreeNode rootTreeNode = repository.getRootTreeNode();
-        assertThat(rootTreeNode.getAccessRules(), is(emptySet()));
-
-        final UserGroup userGroup  = new UserGroup("userGroupName");
-        repository.createAccessRuleForUserGroup("/", userGroup, READ_WRITE, false);
-        assertThat(rootTreeNode.getAccessRules().size(), is(equalTo(1)));
-
-        final AccessRule accessRule = rootTreeNode.getAccessRules().iterator().next();
-        assertThat(accessRule.getUserGroup(), is(sameInstance(userGroup)));
-        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
-        assertThat(accessRule.isExclusion(), is(false));
-    }
-
-    @Test
     public void getRootTreeNode() {
         final Repository repository = new Repository("repositoryName");
         final TreeNode rootTreeNode = repository.getRootTreeNode();
@@ -89,7 +53,7 @@ public final class RepositoryTest {
         assertThat(rootTreeNode.getAccessRules(), is(emptySet()));
 
         final UserGroup userGroup  = new UserGroup("userGroupName");
-        repository.createAccessRuleForUserGroup("/", userGroup, READ_WRITE, false);
+        TreeNode.createAccessRuleForUserGroup(rootTreeNode, "/", userGroup, READ_WRITE, false);
         assertThat(rootTreeNode.getChildren(), is(notNullValue()));
         assertThat(rootTreeNode.getChildren(), is(emptySet()));
         assertThat(rootTreeNode.getAccessRules(), is(notNullValue()));

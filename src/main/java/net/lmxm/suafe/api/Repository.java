@@ -53,32 +53,6 @@ public final class Repository {
         this.name = name;
     }
 
-    /**
-     * Creates a new access rule for the user, with the access level and exclusion value.
-     *
-     * @param path        Path to which the new rule applies
-     * @param user        User to which this rule applies
-     * @param accessLevel Level of access to apply
-     * @param exclusion   Indicates if this rule applies to all users that are not the provided user
-     * @return True if the access rule is added, otherwise false
-     */
-    protected boolean createAccessRuleForUser(final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
-        return TreeNode.createAccessRuleForUser(rootTreeNode, path, user, accessLevel, exclusion);
-    }
-
-    /**
-     * Creates a new access rule for the user group, with the access level and exclusion value.
-     *
-     * @param path        Path to which the new rule applies
-     * @param userGroup   User group to which this rule applies
-     * @param accessLevel Level of access to apply
-     * @param exclusion   Indicates if this rule applies to all users that are not in the provided user group
-     * @return True if the access rule is added, otherwise false
-     */
-    protected boolean createAccessRuleForUserGroup(final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
-        return TreeNode.createAccessRuleForUserGroup(rootTreeNode, path, userGroup, accessLevel, exclusion);
-    }
-
     @Override
     public int hashCode() {
         return name.hashCode();
