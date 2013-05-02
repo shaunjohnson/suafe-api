@@ -6,7 +6,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.LinkedList;
 
-import static net.lmxm.suafe.api.AccessLevel.READ_ONLY;
+import static net.lmxm.suafe.api.TreeNode.*;
 import static net.lmxm.suafe.api.AccessLevel.READ_WRITE;
 import static net.lmxm.suafe.api.CustomMatchers.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -26,7 +26,7 @@ public final class TreeNodeTest {
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(user.getAccessRules(), is(emptySet()));
 
-        TreeNode.addAccessRuleForUser(treeNode, "/", user, READ_WRITE, false);
+        addAccessRuleForUser(treeNode, "/", user, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(not(emptySet())));
         assertThat(user.getAccessRules(), is(not(emptySet())));
 
@@ -44,7 +44,7 @@ public final class TreeNodeTest {
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(user.getAccessRules(), is(emptySet()));
 
-        TreeNode.addAccessRuleForUser(treeNode, "foo/bar", user, READ_WRITE, false);
+        addAccessRuleForUser(treeNode, "foo/bar", user, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(user.getAccessRules(), is(not(emptySet())));
 
@@ -68,7 +68,7 @@ public final class TreeNodeTest {
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(userGroup.getAccessRules(), is(emptySet()));
 
-        TreeNode.addAccessRuleForUserGroup(treeNode, "/", userGroup, READ_WRITE, false);
+        addAccessRuleForUserGroup(treeNode, "/", userGroup, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(not(emptySet())));
         assertThat(userGroup.getAccessRules(), is(not(emptySet())));
 
@@ -86,7 +86,7 @@ public final class TreeNodeTest {
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(userGroup.getAccessRules(), is(emptySet()));
 
-        TreeNode.addAccessRuleForUserGroup(treeNode, "foo/bar", userGroup, READ_WRITE, false);
+        addAccessRuleForUserGroup(treeNode, "foo/bar", userGroup, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(userGroup.getAccessRules(), is(not(emptySet())));
 
@@ -113,7 +113,7 @@ public final class TreeNodeTest {
         assertThat(rootNode.findAccessRuleForUser(otherUser), is(nullValue()));
 
         // Test
-        TreeNode.addAccessRuleForUser(rootNode, "/", user, READ_WRITE, false);
+        addAccessRuleForUser(rootNode, "/", user, READ_WRITE, false);
         assertThat(rootNode.findAccessRuleForUser(user), is(notNullValue()));
         assertThat(rootNode.findAccessRuleForUser(user).getUser(), is(sameInstance(user)));
         assertThat(rootNode.findAccessRuleForUser(otherUser), is(nullValue()));
@@ -126,17 +126,17 @@ public final class TreeNodeTest {
     public void testFindAccessRuleForUserAtPath() {
         // Setup
         final TreeNode rootNode = new TreeNode();
-        TreeNode.buildTree("foo/bar", rootNode);
+        buildTree("foo/bar", rootNode);
         final User user = new User("userName", null);
-        assertThat(rootNode.findAccessRuleForUserAtPath("foo/bar", user), is(nullValue()));
+        assertThat(findAccessRuleForUserAtPath(rootNode, "foo/bar", user), is(nullValue()));
 
         // Test
-        TreeNode.addAccessRuleForUser(rootNode, "foo/bar", user, READ_WRITE, false);
-        assertThat(rootNode.findAccessRuleForUserAtPath("foo/bar", user), is(notNullValue()));
-        assertThat(rootNode.findAccessRuleForUserAtPath("foo/bar", user).getUser(), is(sameInstance(user)));
+        addAccessRuleForUser(rootNode, "foo/bar", user, READ_WRITE, false);
+        assertThat(findAccessRuleForUserAtPath(rootNode, "foo/bar", user), is(notNullValue()));
+        assertThat(findAccessRuleForUserAtPath(rootNode, "foo/bar", user).getUser(), is(sameInstance(user)));
 
         thrown.expect(IllegalArgumentException.class);
-        assertThat(rootNode.findAccessRuleForUserAtPath(null, null), is(notNullValue()));
+        assertThat(findAccessRuleForUserAtPath(rootNode, null, null), is(notNullValue()));
     }
 
     @Test
@@ -149,7 +149,7 @@ public final class TreeNodeTest {
         assertThat(rootNode.findAccessRuleForUserGroup(otherUserGroup), is(nullValue()));
 
         // Test
-        TreeNode.addAccessRuleForUserGroup(rootNode, "/", userGroup, READ_WRITE, false);
+        addAccessRuleForUserGroup(rootNode, "/", userGroup, READ_WRITE, false);
         assertThat(rootNode.findAccessRuleForUserGroup(userGroup), is(notNullValue()));
         assertThat(rootNode.findAccessRuleForUserGroup(userGroup).getUserGroup(), is(sameInstance(userGroup)));
         assertThat(rootNode.findAccessRuleForUserGroup(otherUserGroup), is(nullValue()));
@@ -162,32 +162,32 @@ public final class TreeNodeTest {
     public void testFindAccessRuleForUserGroupAtPath() {
         // Setup
         final TreeNode rootNode = new TreeNode();
-        TreeNode.buildTree("foo/bar", rootNode);
+        buildTree("foo/bar", rootNode);
         final UserGroup userGroup = new UserGroup("userGroupName");
-        assertThat(rootNode.findAccessRuleForUserGroupAtPath("foo/bar", userGroup), is(nullValue()));
+        assertThat(findAccessRuleForUserGroupAtPath(rootNode, "foo/bar", userGroup), is(nullValue()));
 
         // Test
-        TreeNode.addAccessRuleForUserGroup(rootNode, "foo/bar", userGroup, READ_WRITE, false);
-        assertThat(rootNode.findAccessRuleForUserGroupAtPath("foo/bar", userGroup), is(notNullValue()));
-        assertThat(rootNode.findAccessRuleForUserGroupAtPath("foo/bar", userGroup).getUserGroup(), is(sameInstance(userGroup)));
+        addAccessRuleForUserGroup(rootNode, "foo/bar", userGroup, READ_WRITE, false);
+        assertThat(findAccessRuleForUserGroupAtPath(rootNode, "foo/bar", userGroup), is(notNullValue()));
+        assertThat(findAccessRuleForUserGroupAtPath(rootNode, "foo/bar", userGroup).getUserGroup(), is(sameInstance(userGroup)));
 
         thrown.expect(IllegalArgumentException.class);
-        assertThat(rootNode.findAccessRuleForUserGroupAtPath(null, null), is(notNullValue()));
+        assertThat(findAccessRuleForUserGroupAtPath(rootNode, null, null), is(notNullValue()));
     }
 
     @Test
     public void testFindByPath() {
         final TreeNode rootNode = new TreeNode();
-        assertThat(rootNode.findByPath("/"), is(notNullValue()));
-        assertThat(rootNode.findByPath("/"), is(sameInstance(rootNode)));
+        assertThat(findByPath(rootNode, "/"), is(notNullValue()));
+        assertThat(findByPath(rootNode, "/"), is(sameInstance(rootNode)));
 
-        TreeNode.buildTree("foo/bar", rootNode);
-        assertThat(rootNode.findByPath("foo"), is(notNullValue()));
-        assertThat(rootNode.findByPath("foo").getName(), is(equalTo("foo")));
-        assertThat(rootNode.findByPath("foo/bar"), is(notNullValue()));
-        assertThat(rootNode.findByPath("foo/bar").getName(), is(equalTo("bar")));
+        buildTree("foo/bar", rootNode);
+        assertThat(findByPath(rootNode, "foo"), is(notNullValue()));
+        assertThat(findByPath(rootNode, "foo").getName(), is(equalTo("foo")));
+        assertThat(findByPath(rootNode, "foo/bar"), is(notNullValue()));
+        assertThat(findByPath(rootNode, "foo/bar").getName(), is(equalTo("bar")));
 
-        assertThat(rootNode.findByPath("does-not-exist"), is(nullValue()));
+        assertThat(findByPath(rootNode, "does-not-exist"), is(nullValue()));
     }
 
     @Test
@@ -207,14 +207,14 @@ public final class TreeNodeTest {
     @Test
     public void testGetChildrenRootPath() {
         final TreeNode rootNode = new TreeNode();
-        TreeNode.buildTree("/", rootNode);
+        buildTree("/", rootNode);
         assertThat(rootNode.getChildren(), is(emptySet()));
     }
 
     @Test
     public void testGetChildrenBasicPath() {
         final TreeNode rootNode = new TreeNode();
-        TreeNode.buildTree("foobar", rootNode);
+        buildTree("foobar", rootNode);
         assertThat(rootNode.getChildren().size(), is(equalTo(1)));
         assertThat(rootNode.getChildren(), is(containsNodeWithName("foobar")));
     }
@@ -222,8 +222,8 @@ public final class TreeNodeTest {
     @Test
     public void testGetChildrenMultipleChildren() {
         final TreeNode rootNode = new TreeNode();
-        TreeNode.buildTree("foo", rootNode);
-        TreeNode.buildTree("bar", rootNode);
+        buildTree("foo", rootNode);
+        buildTree("bar", rootNode);
         assertThat(rootNode.getChildren().size(), is(equalTo(2)));
 
         assertThat(rootNode.getChildren(), is(containsNodeWithName("foo")));

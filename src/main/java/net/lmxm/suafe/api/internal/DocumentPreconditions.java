@@ -65,7 +65,7 @@ public final class DocumentPreconditions {
      * @throws EntityAlreadyExistsException When access rule at path for user already exists
      */
     public static void checkThatAccessRuleForUserDoesNotExist(final TreeNode treeNode, final String path, final User user) {
-        if (treeNode.findAccessRuleForUserAtPath(path, user) != null) {
+        if (TreeNode.findAccessRuleForUserAtPath(treeNode, path, user) != null) {
             throw new EntityAlreadyExistsException(MessageKey.accessRuleForUserAlreadyExists, path, user.getName());
         }
     }
@@ -79,7 +79,7 @@ public final class DocumentPreconditions {
      * @throws EntityAlreadyExistsException When access rule at path for user group already exists
      */
     public static void checkThatAccessRuleForUserGroupDoesNotExist(final TreeNode treeNode, final String path, final UserGroup userGroup) {
-        if (treeNode.findAccessRuleForUserGroupAtPath(path, userGroup) != null) {
+        if (TreeNode.findAccessRuleForUserGroupAtPath(treeNode, path, userGroup) != null) {
             throw new EntityAlreadyExistsException(MessageKey.accessRuleForUserGroupAlreadyExists, path, userGroup.getName());
         }
     }

@@ -53,23 +53,6 @@ public final class TreeNode {
     }
 
     /**
-     * Adds an access rule to this tree at the specified path.
-     *
-     * @param rootTreeNode Root tree node from which to search for the specified path
-     * @param path         Path to which the new rule applies
-     * @param user         User to which this rule applies
-     * @param accessLevel  Level of access to apply
-     * @param exclusion    Indicates if this rule applies to all users that are not the provided user
-     * @return true if the access rule is added, otherwise false
-     * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
-     */
-    protected static boolean addAccessRuleForUser(final TreeNode rootTreeNode, final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
-        checkThatAccessRuleForUserDoesNotExist(rootTreeNode, path, user);
-
-        return buildTree(path, rootTreeNode).addAccessRuleForUser(user, accessLevel, exclusion);
-    }
-
-    /**
      * Adds an access rule to this tree node.
      *
      * @param user        User to which this rule applies
@@ -88,23 +71,6 @@ public final class TreeNode {
     }
 
     /**
-     * Adds an access rule to this tree at the specified path.
-     *
-     * @param rootTreeNode Root tree node from which to search for the specified path
-     * @param path         Path to which the new rule applies
-     * @param userGroup    User group to which this rule applies
-     * @param accessLevel  Level of access to apply
-     * @param exclusion    Indicates if this rule applies to all users that are not in the provided user group
-     * @return true if the access rule is added, otherwise false
-     * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
-     */
-    protected static boolean addAccessRuleForUserGroup(final TreeNode rootTreeNode, final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
-        checkThatAccessRuleForUserGroupDoesNotExist(rootTreeNode, path, userGroup);
-
-        return buildTree(path, rootTreeNode).addAccessRuleForUserGroup(userGroup, accessLevel, exclusion);
-    }
-
-    /**
      * Adds an access rule to this tree node.
      *
      * @param userGroup   User group to which this rule applies
@@ -120,30 +86,6 @@ public final class TreeNode {
 
         final AccessRule accessRule = new AccessRule(this, userGroup, accessLevel, exclusion);
         return accessRules.add(accessRule) && userGroup.addAccessRule(accessRule);
-    }
-
-    /**
-     * Finds an ancestor node at the provided path.
-     *
-     * @param path Path of ancestor node to find
-     * @return Matching node or null if no nodes exist at the path
-     */
-    protected TreeNode findByPath(final String path) {
-        checkArgumentPathValid(path, "Path");
-
-        TreeNode matchingNode = this;
-        final LinkedList<String> nodeNames = splitPath(path);
-        if (nodeNames.size() > 0) {
-            for (final String name : nodeNames) {
-                matchingNode = matchingNode.children.get(name);
-
-                if (matchingNode == null) {
-                    break;
-                }
-            }
-        }
-
-        return matchingNode;
     }
 
     /**
@@ -167,18 +109,6 @@ public final class TreeNode {
     }
 
     /**
-     * Finds an access rule for the specified user at the provided path.
-     *
-     * @param path Path of tree node to find
-     * @param user User that is used to find a matching access rule
-     * @return Access that applies to the specified user
-     */
-    public AccessRule findAccessRuleForUserAtPath(final String path, final User user) {
-        final TreeNode treeNode = findByPath(path);
-        return treeNode == null ? null : treeNode.findAccessRuleForUser(user);
-    }
-
-    /**
      * Finds an access rule for the specified user group.
      *
      * @param userGroup group User group that is used to find a matching access rule
@@ -196,18 +126,6 @@ public final class TreeNode {
         }
 
         return foundAccessRule;
-    }
-
-    /**
-     * Finds an access rule for the specified user group at the provided path.
-     *
-     * @param path      Path of tree node to find
-     * @param userGroup User group that is used to find a matching access rule
-     * @return Access that applies to the specified user group
-     */
-    public AccessRule findAccessRuleForUserGroupAtPath(final String path, final UserGroup userGroup) {
-        final TreeNode treeNode = findByPath(path);
-        return treeNode == null ? null : treeNode.findAccessRuleForUserGroup(userGroup);
     }
 
     /**
@@ -265,6 +183,40 @@ public final class TreeNode {
     }
 
     /**
+     * Adds an access rule to this tree at the specified path.
+     *
+     * @param rootTreeNode Root tree node from which to search for the specified path
+     * @param path         Path to which the new rule applies
+     * @param user         User to which this rule applies
+     * @param accessLevel  Level of access to apply
+     * @param exclusion    Indicates if this rule applies to all users that are not the provided user
+     * @return true if the access rule is added, otherwise false
+     * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
+     */
+    protected static boolean addAccessRuleForUser(final TreeNode rootTreeNode, final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
+        checkThatAccessRuleForUserDoesNotExist(rootTreeNode, path, user);
+
+        return buildTree(path, rootTreeNode).addAccessRuleForUser(user, accessLevel, exclusion);
+    }
+
+    /**
+     * Adds an access rule to this tree at the specified path.
+     *
+     * @param rootTreeNode Root tree node from which to search for the specified path
+     * @param path         Path to which the new rule applies
+     * @param userGroup    User group to which this rule applies
+     * @param accessLevel  Level of access to apply
+     * @param exclusion    Indicates if this rule applies to all users that are not in the provided user group
+     * @return true if the access rule is added, otherwise false
+     * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
+     */
+    protected static boolean addAccessRuleForUserGroup(final TreeNode rootTreeNode, final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
+        checkThatAccessRuleForUserGroupDoesNotExist(rootTreeNode, path, userGroup);
+
+        return buildTree(path, rootTreeNode).addAccessRuleForUserGroup(userGroup, accessLevel, exclusion);
+    }
+
+    /**
      * Builds a tree of tree node objects using the provided path string.
      *
      * @param path     Path representation of the tree (e.g. one/two/three)
@@ -275,18 +227,6 @@ public final class TreeNode {
         checkArgumentPathValid(path, "Path");
 
         return buildTreeRecursively(splitPath(path), treeNode);
-    }
-
-    /**
-     * Splits a path string into parts as a linked list.
-     *
-     * @param path Path string to split
-     * @return Linked list containing all path parts
-     */
-    protected static LinkedList<String> splitPath(final String path) {
-        final LinkedList<String> linkedList = new LinkedList<String>();
-        Collections.addAll(linkedList, path.split("/"));
-        return linkedList;
     }
 
     /**
@@ -304,5 +244,68 @@ public final class TreeNode {
             final TreeNode childTreeNode = treeNode.findOrCreateChildByName(nodeNames.pop());
             return buildTreeRecursively(nodeNames, childTreeNode);
         }
+    }
+
+    /**
+     * Finds an access rule for the specified user at the provided path.
+     *
+     * @param treeNode Tree node from which to start search
+     * @param path     Path of tree node to find
+     * @param user     User that is used to find a matching access rule
+     * @return Access that applies to the specified user
+     */
+    public static AccessRule findAccessRuleForUserAtPath(final TreeNode treeNode, final String path, final User user) {
+        final TreeNode targetTreeNode = findByPath(treeNode, path);
+        return targetTreeNode == null ? null : targetTreeNode.findAccessRuleForUser(user);
+    }
+
+    /**
+     * Finds an access rule for the specified user group at the provided path.
+     *
+     * @param treeNode  Tree node from which to start search
+     * @param path      Path of tree node to find
+     * @param userGroup User group that is used to find a matching access rule
+     * @return Access that applies to the specified user group
+     */
+    public static AccessRule findAccessRuleForUserGroupAtPath(final TreeNode treeNode, final String path, final UserGroup userGroup) {
+        final TreeNode targetTreeNode = findByPath(treeNode, path);
+        return targetTreeNode == null ? null : targetTreeNode.findAccessRuleForUserGroup(userGroup);
+    }
+
+    /**
+     * Finds an ancestor node at the provided path.
+     *
+     * @param treeNode Tree node from which to start search
+     * @param path     Path of ancestor node to find
+     * @return Matching node or null if no nodes exist at the path
+     */
+    protected static TreeNode findByPath(final TreeNode treeNode, final String path) {
+        checkArgumentPathValid(path, "Path");
+
+        TreeNode matchingNode = treeNode;
+        final LinkedList<String> nodeNames = splitPath(path);
+        if (nodeNames.size() > 0) {
+            for (final String name : nodeNames) {
+                matchingNode = matchingNode.children.get(name);
+
+                if (matchingNode == null) {
+                    break;
+                }
+            }
+        }
+
+        return matchingNode;
+    }
+
+    /**
+     * Splits a path string into parts as a linked list.
+     *
+     * @param path Path string to split
+     * @return Linked list containing all path parts
+     */
+    protected static LinkedList<String> splitPath(final String path) {
+        final LinkedList<String> linkedList = new LinkedList<String>();
+        Collections.addAll(linkedList, path.split("/"));
+        return linkedList;
     }
 }
