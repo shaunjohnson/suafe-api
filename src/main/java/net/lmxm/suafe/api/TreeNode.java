@@ -60,16 +60,18 @@ public final class TreeNode {
      * @param user        User to which this rule applies
      * @param accessLevel Level of access to apply
      * @param exclusion   Indicates if this rule applies to all users that are not the provided user
-     * @return true if the access rule is added, otherwise false
+     * @return Newly created access rule
      * @throws EntityAlreadyExistsException When access rule already exists at this path for this user
      */
-    protected boolean createAccessRuleForUser(final User user, final AccessLevel accessLevel, final boolean exclusion) {
+    protected AccessRule createAccessRuleForUser(final User user, final AccessLevel accessLevel, final boolean exclusion) {
         checkArgumentNotNull(user, "User");
         checkArgumentNotNull(accessLevel, "Access level");
         checkThatAccessRuleForUserDoesNotExist(this, "/", user);
 
         final AccessRule accessRule = new AccessRule(this, user, accessLevel, exclusion);
-        return accessRules.add(accessRule) && user.addAccessRule(accessRule);
+        accessRules.add(accessRule);
+        user.addAccessRule(accessRule);
+        return accessRule;
     }
 
     /**
@@ -78,16 +80,18 @@ public final class TreeNode {
      * @param userGroup   User group to which this rule applies
      * @param accessLevel Level of access to apply
      * @param exclusion   Indicates if this rule applies to all users that are not in the provided user group
-     * @return true if the access rule is added, otherwise false
+     * @return Newly created access rule
      * @throws EntityAlreadyExistsException When access rule already exists at this path for this user group
      */
-    protected boolean createAccessRuleForUserGroup(final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
+    protected AccessRule createAccessRuleForUserGroup(final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
         checkArgumentNotNull(userGroup, "User group");
         checkArgumentNotNull(accessLevel, "Access level");
         checkThatAccessRuleForUserGroupDoesNotExist(this, "/", userGroup);
 
         final AccessRule accessRule = new AccessRule(this, userGroup, accessLevel, exclusion);
-        return accessRules.add(accessRule) && userGroup.addAccessRule(accessRule);
+        accessRules.add(accessRule);
+        userGroup.addAccessRule(accessRule);
+        return accessRule;
     }
 
     /**
@@ -220,10 +224,10 @@ public final class TreeNode {
      * @param user         User to which the rule applies
      * @param accessLevel  Level of access to apply
      * @param exclusion    Indicates if this rule applies to all users that are not the provided user
-     * @return true if the access rule is added, otherwise false
+     * @return Newly created access rule
      * @throws EntityAlreadyExistsException When access rule already exists at this path for this user
      */
-    protected static boolean createAccessRuleForUser(final TreeNode rootTreeNode, final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
+    protected static AccessRule createAccessRuleForUser(final TreeNode rootTreeNode, final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
         checkThatAccessRuleForUserDoesNotExist(rootTreeNode, path, user);
 
         return buildTree(path, rootTreeNode).createAccessRuleForUser(user, accessLevel, exclusion);
@@ -252,10 +256,10 @@ public final class TreeNode {
      * @param userGroup    User group to which the rule applies
      * @param accessLevel  Level of access to apply
      * @param exclusion    Indicates if this rule applies to all users that are not in the provided user group
-     * @return true if the access rule is added, otherwise false
+     * @return Newly created access rule
      * @throws EntityAlreadyExistsException When access rule already exists at this path for this user
      */
-    protected static boolean createAccessRuleForUserGroup(final TreeNode rootTreeNode, final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
+    protected static AccessRule createAccessRuleForUserGroup(final TreeNode rootTreeNode, final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
         checkThatAccessRuleForUserGroupDoesNotExist(rootTreeNode, path, userGroup);
 
         return buildTree(path, rootTreeNode).createAccessRuleForUserGroup(userGroup, accessLevel, exclusion);

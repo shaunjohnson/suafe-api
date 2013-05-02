@@ -128,9 +128,9 @@ public final class Document {
      * @param userName       Name of user to which this rule applies
      * @param accessLevel    Level of access to apply
      * @param exclusion      Indicates if this rule applies to all users that are not in the provided user group
-     * @return True if the access rule is added, otherwise false
+     * @return Newly created access rule
      */
-    public boolean createAccessRuleForUser(final String repositoryName, final String path, final String userName, final AccessLevel accessLevel, final boolean exclusion) {
+    public AccessRule createAccessRuleForUser(final String repositoryName, final String path, final String userName, final AccessLevel accessLevel, final boolean exclusion) {
         final User user = checkThatUserWithNameExists(this, userName);
         final TreeNode treeNode = getApplicableRootTreeNode(repositoryName);
 
@@ -145,9 +145,9 @@ public final class Document {
      * @param userGroupName  Name of user group to which this rule applies
      * @param accessLevel    Level of access to apply
      * @param exclusion      Indicates if this rule applies to all users that are not in the provided user group
-     * @return True if the access rule is added, otherwise false
+     * @return Newly created access rule
      */
-    public boolean createAccessRuleForUserGroup(final String repositoryName, final String path, final String userGroupName, final AccessLevel accessLevel, final boolean exclusion) {
+    public AccessRule createAccessRuleForUserGroup(final String repositoryName, final String path, final String userGroupName, final AccessLevel accessLevel, final boolean exclusion) {
         final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
         final TreeNode treeNode = getApplicableRootTreeNode(repositoryName);
 
