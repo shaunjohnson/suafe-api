@@ -21,6 +21,34 @@ public final class TreeNodeTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
+    public void testCloneAllAccessRulesInTree() {
+        final TreeNode source = new TreeNode();
+        final TreeNode target = new TreeNode();
+
+        // Setup
+        final User user = new User("userName", null);
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        createAccessRuleForUser(source, "foo/bar", user, READ_ONLY, false);
+        createAccessRuleForUserGroup(source, "foo/bar/baz", userGroup, READ_ONLY, false);
+
+        assertThat(findAccessRuleForUserAtPath(source, "foo/bar", user), is(notNullValue()));
+        assertThat(findAccessRuleForUserAtPath(source, "foo/bar", user).getUser(), is(equalTo(user)));
+        assertThat(findAccessRuleForUserGroupAtPath(source, "foo/bar/baz", userGroup), is(notNullValue()));
+        assertThat(findAccessRuleForUserGroupAtPath(source, "foo/bar/baz", userGroup).getUserGroup(), is(equalTo(userGroup)));
+
+        assertThat(findAccessRuleForUserAtPath(target, "foo/bar", user), is(nullValue()));
+        assertThat(findAccessRuleForUserGroupAtPath(target, "foo/bar/baz", userGroup), is(nullValue()));
+
+        // Test
+        cloneAllAccessRulesInTree(source, target);
+
+        assertThat(findAccessRuleForUserAtPath(target, "foo/bar", user), is(notNullValue()));
+        assertThat(findAccessRuleForUserAtPath(target, "foo/bar", user).getUser(), is(equalTo(user)));
+        assertThat(findAccessRuleForUserGroupAtPath(target, "foo/bar/baz", userGroup), is(notNullValue()));
+        assertThat(findAccessRuleForUserGroupAtPath(target, "foo/bar/baz", userGroup).getUserGroup(), is(equalTo(userGroup)));
+    }
+
+    @Test
     public void testCreateAccessRuleForUser() {
         final TreeNode treeNode = new TreeNode();
         final User user = new User("userName", null);

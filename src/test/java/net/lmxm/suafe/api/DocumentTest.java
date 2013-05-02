@@ -54,6 +54,41 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testCloneRepository_AccessRules() {
+        final Document document = new Document();
+
+        // Setup
+        document.createRepository("repositoryName");
+        final User user = document.createUser("userName", "userAlias");
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        document.createAccessRuleForUser("repositoryName", "/", "userName", READ_ONLY, false);
+        document.createAccessRuleForUserGroup("repositoryName", "/", "userGroupName", READ_ONLY, false);
+
+        final AccessRule userAccessRule = document.findAccessRuleForUserAtPath("repositoryName", "/", "userName");
+        assertThat(userAccessRule, is(notNullValue()));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(containsSameInstance(userAccessRule)));
+
+        final AccessRule userGroupAccessRule = document.findAccessRuleForUserGroupAtPath("repositoryName", "/", "userGroupName");
+        assertThat(userGroupAccessRule, is(notNullValue()));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(containsSameInstance(userGroupAccessRule)));
+
+        // Test
+        document.cloneRepository("repositoryName", "cloneRepositoryName");
+
+        final AccessRule cloneUserAccessRule = document.findAccessRuleForUserAtPath("cloneRepositoryName", "/", "userName");
+        assertThat(cloneUserAccessRule, is(notNullValue()));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(containsSameInstance(cloneUserAccessRule)));
+
+        final AccessRule cloneUserGroupAccessRule = document.findAccessRuleForUserGroupAtPath("cloneRepositoryName", "/", "userGroupName");
+        assertThat(userGroupAccessRule, is(notNullValue()));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(containsSameInstance(cloneUserGroupAccessRule)));
+    }
+
+    @Test
     public void testCloneUser() {
         final Document document = new Document();
 

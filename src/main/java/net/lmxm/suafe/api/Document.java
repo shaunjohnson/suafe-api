@@ -68,6 +68,8 @@ public final class Document {
         final Repository existingRepository = checkThatRepositoryExists(this, repositoryName);
         final Repository cloneRepository = createRepository(cloneRepositoryName);
 
+        TreeNode.cloneAllAccessRulesInTree(existingRepository.getRootTreeNode(), cloneRepository.getRootTreeNode());
+
         return cloneRepository;
     }
 

@@ -264,6 +264,27 @@ public final class TreeNode {
     }
 
     /**
+     * Clones all access rules in the source tree into the target tree.
+     *
+     * @param sourceTreeNode Source tree
+     * @param targetTreeNode Target tree
+     */
+    protected static void cloneAllAccessRulesInTree(final TreeNode sourceTreeNode, final TreeNode targetTreeNode) {
+        for (final AccessRule accessRule : sourceTreeNode.getAccessRules()) {
+            if (accessRule.getUser() != null) {
+                targetTreeNode.createAccessRuleForUser(accessRule.getUser(), accessRule.getAccessLevel(), accessRule.isExclusion());
+            }
+            else if (accessRule.getUserGroup() != null) {
+                targetTreeNode.createAccessRuleForUserGroup(accessRule.getUserGroup(), accessRule.getAccessLevel(), accessRule.isExclusion());
+            }
+        }
+
+        for (final TreeNode child : sourceTreeNode.getChildren()) {
+            cloneAllAccessRulesInTree(child, targetTreeNode.findOrCreateChildByName(child.getName()));
+        }
+    }
+
+    /**
      * Creates an access rule to the provided tree at the specified path.
      *
      * @param rootTreeNode Root tree node from which to search for the specified path
