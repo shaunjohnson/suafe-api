@@ -229,6 +229,51 @@ public final class TreeNodeTest {
     }
 
     @Test
+    public void testDeleteAllAccessRulesInTree() {
+        final String[] nodeNames = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        final int width = 100;
+        String path = "";
+        final TreeNode rootTreeNode = new TreeNode();
+        final User user = new User("userName", null);
+        final UserGroup userGroup = new UserGroup("userGroupName");
+
+        // Setup
+        path = "";
+        for (final String nodeName : nodeNames) {
+            path += (path.length() == 0 ? nodeName : ("/" + nodeName));
+
+            for (int i = 0; i < width; i++) {
+                createAccessRuleForUser(rootTreeNode, path + i, user, READ_ONLY, false);
+                createAccessRuleForUserGroup(rootTreeNode, path + i, userGroup, READ_ONLY, false);
+            }
+        }
+
+        path = "";
+        for (final String nodeName : nodeNames) {
+            path += (path.length() == 0 ? nodeName : ("/" + nodeName));
+
+            for (int i = 0; i < width; i++) {
+                final TreeNode treeNode = findByPath(rootTreeNode, path + i);
+                assertThat(treeNode.getAccessRules(), is(not(emptySet())));
+                assertThat(treeNode.getAccessRules().size(), is(equalTo(2)));
+            }
+        }
+
+        // Test
+        deleteAllAccessRulesInTree(rootTreeNode);
+
+        path = "";
+        for (final String nodeName : nodeNames) {
+            path += (path.length() == 0 ? nodeName : ("/" + nodeName));
+
+            for (int i = 0; i < width; i++) {
+                final TreeNode treeNode = findByPath(rootTreeNode, path + i);
+                assertThat(treeNode.getAccessRules(), is(emptySet()));
+            }
+        }
+    }
+
+    @Test
     public void testExtractUsersFromAccessRules() {
         final TreeNode treeNode = new TreeNode();
         final User user = new User("userName", null);

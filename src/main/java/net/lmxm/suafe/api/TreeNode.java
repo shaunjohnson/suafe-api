@@ -358,6 +358,19 @@ public final class TreeNode {
     }
 
     /**
+     * Deletes all access rules that appear within a tree.
+     *
+     * @param treeNode Tree that is traversed to delete access rules
+     */
+    public static void deleteAllAccessRulesInTree(final TreeNode treeNode) {
+        treeNode.deleteAllAccessRules();
+
+        for (final TreeNode child : treeNode.getChildren()) {
+            deleteAllAccessRulesInTree(child);
+        }
+    }
+
+    /**
      * Finds an access rule for the specified user at the provided path.
      *
      * @param treeNode Tree node from which to start search
