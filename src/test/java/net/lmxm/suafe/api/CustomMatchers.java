@@ -20,7 +20,6 @@ public final class CustomMatchers {
      */
     public static <T> Matcher<Set<T>> containsSameInstance(final T target) {
         return new BaseMatcher<Set<T>>() {
-            @Override
             @SuppressWarnings(value = "unchecked")
             public boolean matches(final Object item) {
                 for (final T t : ((Set<T>)item)) {
@@ -32,7 +31,6 @@ public final class CustomMatchers {
                 return false;
             }
 
-            @Override
             public void describeTo(Description description) {
                 description.appendText("not contains same instance");
             }
@@ -46,7 +44,6 @@ public final class CustomMatchers {
      */
     public static Matcher<Set<TreeNode>> containsNodeWithName(final String name) {
         return new BaseMatcher<Set<TreeNode>>() {
-            @Override
             @SuppressWarnings(value = "unchecked")
             public boolean matches(final Object item) {
                 for (final TreeNode treeNode : ((Set<TreeNode>)item)) {
@@ -58,7 +55,6 @@ public final class CustomMatchers {
                 return false;
             }
 
-            @Override
             public void describeTo(Description description) {
                 description.appendText("not contains node with name ").appendValue(name);
             }
@@ -72,12 +68,10 @@ public final class CustomMatchers {
      */
     public static Matcher<Set> emptySet() {
         return new BaseMatcher<Set>() {
-            @Override
             public boolean matches(final Object item) {
                 return Set.class.isInstance(item) && ((Set) item).isEmpty();
             }
 
-            @Override
             public void describeTo(final Description description) {
                 description.appendText("not empty set");
             }
@@ -91,7 +85,6 @@ public final class CustomMatchers {
      */
     public static Matcher<Set> immutableSet() {
         return new BaseMatcher<Set>() {
-            @Override
             @SuppressWarnings(value = "unchecked")
             public boolean matches(final Object item) {
                 if (!Set.class.isInstance(item)) {
@@ -151,7 +144,6 @@ public final class CustomMatchers {
                 return true;
             }
 
-            @Override
             public void describeTo(final Description description) {
                 description.appendText("not throwing UnsupportedOperationException when set is modified");
             }
@@ -165,7 +157,6 @@ public final class CustomMatchers {
      */
     public static Matcher<Class> protectedConstructor() {
         return new BaseMatcher<Class>() {
-            @Override
             public boolean matches(final Object item) {
                 if (!Class.class.isInstance(item)) {
                     return false;
@@ -180,7 +171,6 @@ public final class CustomMatchers {
                 return true;
             }
 
-            @Override
             public void describeTo(final Description description) {
                 description.appendText("not a protected constructor");
             }
@@ -195,7 +185,6 @@ public final class CustomMatchers {
      */
     public static Matcher<Class> protectedMethod(final String methodName) {
         return new BaseMatcher<Class>() {
-            @Override
             public boolean matches(final Object item) {
                 if (!Class.class.isInstance(item)) {
                     return false;
@@ -206,7 +195,6 @@ public final class CustomMatchers {
                 return method != null && Modifier.isProtected(method.getModifiers());
             }
 
-            @Override
             public void describeTo(Description description) {
                 description.appendText("not not a protected method");
             }
