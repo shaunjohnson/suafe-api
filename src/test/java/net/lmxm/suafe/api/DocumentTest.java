@@ -409,6 +409,72 @@ public final class DocumentTest {
     }
 
     @Test
+    public void testFindAccessRuleForUserAtPath() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", null);
+        document.addAccessRuleForUser(null, "foo/bar", "userName", READ_ONLY, false);
+
+        // Test
+        final AccessRule accessRule = document.findAccessRuleForUserAtPath(null, "foo/bar", "userName");
+        assertThat(accessRule, is(notNullValue()));
+        assertThat(accessRule.getUser(), is(sameInstance(user)));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_ONLY)));
+        assertThat(accessRule.isExclusion(), is(false));
+    }
+
+    @Test
+    public void testFindAccessRuleForUserAtPathRepository() {
+        final Document document = new Document();
+
+        // Setup
+        final User user = document.createUser("userName", null);
+        document.createRepository("repositoryName");
+        document.addAccessRuleForUser("repositoryName", "foo/bar", "userName", READ_ONLY, false);
+
+        // Test
+        final AccessRule accessRule = document.findAccessRuleForUserAtPath("repositoryName", "foo/bar", "userName");
+        assertThat(accessRule, is(notNullValue()));
+        assertThat(accessRule.getUser(), is(sameInstance(user)));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_ONLY)));
+        assertThat(accessRule.isExclusion(), is(false));
+    }
+
+    @Test
+    public void testFindAccessRuleForUserGroupAtPath() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        document.addAccessRuleForUserGroup(null, "foo/bar", "userGroupName", READ_ONLY, false);
+
+        // Test
+        final AccessRule accessRule = document.findAccessRuleForUserGroupAtPath(null, "foo/bar", "userGroupName");
+        assertThat(accessRule, is(notNullValue()));
+        assertThat(accessRule.getUserGroup(), is(sameInstance(userGroup)));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_ONLY)));
+        assertThat(accessRule.isExclusion(), is(false));
+    }
+
+    @Test
+    public void testFindAccessRuleForUserGroupAtPathRepository() {
+        final Document document = new Document();
+
+        // Setup
+        final UserGroup userGroup = document.createUserGroup("userGroupName");
+        document.createRepository("repositoryName");
+        document.addAccessRuleForUserGroup("repositoryName", "foo/bar", "userGroupName", READ_ONLY, false);
+
+        // Test
+        final AccessRule accessRule = document.findAccessRuleForUserGroupAtPath("repositoryName", "foo/bar", "userGroupName");
+        assertThat(accessRule, is(notNullValue()));
+        assertThat(accessRule.getUserGroup(), is(sameInstance(userGroup)));
+        assertThat(accessRule.getAccessLevel(), is(equalTo(READ_ONLY)));
+        assertThat(accessRule.isExclusion(), is(false));
+    }
+
+    @Test
     public void testFindRepositoryByName() {
         final Document document = new Document();
 

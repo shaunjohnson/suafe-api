@@ -38,13 +38,13 @@ public final class Document {
      * @return True if the access rule is added, otherwise false
      */
     public boolean addAccessRuleForUser(final String repositoryName, final String path, final String userName, final AccessLevel accessLevel, final boolean exclusion) {
-        final Repository repository = isBlank(repositoryName) ? null : checkThatRepositoryExists(this, repositoryName);
         final User user = checkThatUserWithNameExists(this, userName);
 
-        if (repository == null) {
+        if (isBlank(repositoryName)) {
             return TreeNode.addAccessRuleForUser(rootTreeNode, path, user, accessLevel, exclusion);
         }
         else {
+            final Repository repository = checkThatRepositoryExists(this, repositoryName);
             return repository.addAccessRuleForUser(path, user, accessLevel, exclusion);
         }
     }
@@ -259,6 +259,46 @@ public final class Document {
         }
 
         userGroups.remove(targetUserGroup);
+    }
+
+    /**
+     * Finds an access rule for the specified user at the provided path.
+     *
+     * @param repositoryName Name of the repository to which the access rule applies
+     * @param path           Path of tree node to find
+     * @param userName       Name of user that is used to find a matching access rule
+     * @return Access that applies to the specified user
+     */
+    public AccessRule findAccessRuleForUserAtPath(final String repositoryName, final String path, final String userName) {
+        final User user = checkThatUserWithNameExists(this, userName);
+
+        if (isBlank(repositoryName)) {
+            return TreeNode.findAccessRuleForUserAtPath(rootTreeNode, path, user);
+        }
+        else {
+            final Repository repository = checkThatRepositoryExists(this, repositoryName);
+            return TreeNode.findAccessRuleForUserAtPath(repository.getRootTreeNode(), path, user);
+        }
+    }
+
+    /**
+     * Finds an access rule for the specified user group at the provided path.
+     *
+     * @param repositoryName Name of the repository to which the access rule applies
+     * @param path           Path of tree node to find
+     * @param userGroupName       Name of user group that is used to find a matching access rule
+     * @return Access that applies to the specified user group
+     */
+    public AccessRule findAccessRuleForUserGroupAtPath(final String repositoryName, final String path, final String userGroupName) {
+        final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
+
+        if (isBlank(repositoryName)) {
+            return TreeNode.findAccessRuleForUserGroupAtPath(rootTreeNode, path, userGroup);
+        }
+        else {
+            final Repository repository = checkThatRepositoryExists(this, repositoryName);
+            return TreeNode.findAccessRuleForUserGroupAtPath(repository.getRootTreeNode(), path, userGroup);
+        }
     }
 
     /**
