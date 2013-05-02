@@ -390,7 +390,7 @@ public final class Document {
      * @return Matching user group or null if not found
      */
     public UserGroup findUserGroupByName(final String userGroupName) {
-        checkArgumentNotBlank(userGroupName, "User group name");
+        checkUserGroupName(userGroupName);
 
         for (final UserGroup userGroup : userGroups) {
             if (userGroup.getName().equals(userGroupName)) {

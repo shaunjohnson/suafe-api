@@ -363,6 +363,38 @@ public final class PreconditionsTest {
     }
 
     @Test
+    public void testCheckUserGroupNameNullValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("group name"));
+        checkUserGroupName(null);
+    }
+
+    @Test
+    public void testCheckUserGroupNameEmptyValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("group name"));
+        checkUserGroupName("");
+    }
+
+    @Test
+    public void testCheckUserGroupNameBlankValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("group name"));
+        checkUserGroupName("    ");
+    }
+
+    @Test
+    public void testCheckUserGroupNameInvalidValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("invalid"));
+        thrown.expectMessage(containsString("group name"));
+        checkUserGroupName("abc=abc");
+    }
+
+    @Test
     public void testCheckUserNameNullValues() {
         thrown.expect(InvalidEntityNameException.class);
         thrown.expectMessage(containsString("null/blank"));

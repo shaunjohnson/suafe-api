@@ -17,6 +17,12 @@ public final class Preconditions {
      * Regular expression pattern representing a valid user alias.
      */
     private static final Pattern VALID_USER_ALIAS_PATTERN = Pattern.compile("^[^=]+$");
+
+    /**
+     * Regular expression pattern representing a valid user group name.
+     */
+    private static final Pattern VALID_USER_GROUP_NAME_PATTERN = Pattern.compile("^[^=]+$");
+
     /**
      * Regular expression pattern representing a valid user name.
      */
@@ -265,6 +271,25 @@ public final class Preconditions {
         }
 
         return userAlias;
+    }
+
+    /**
+     * Checks if the provided user group name is valid.
+     *
+     * @param userGroupName User group name to validate
+     * @return Validated user name
+     * @throws InvalidEntityNameException When user name is deemed invalid
+     */
+    public static String checkUserGroupName(final String userGroupName) {
+        if (isBlank(userGroupName)) {
+            throw new InvalidEntityNameException(MessageKey.userGroupNameIsBlank, userGroupName);
+        }
+
+        if (!VALID_USER_GROUP_NAME_PATTERN.matcher(userGroupName).matches()) {
+            throw new InvalidEntityNameException(MessageKey.userGroupNameIsInvalid, userGroupName);
+        }
+
+        return userGroupName;
     }
 
     /**
