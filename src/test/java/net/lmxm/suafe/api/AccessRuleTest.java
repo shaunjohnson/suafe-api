@@ -16,23 +16,36 @@ public final class AccessRuleTest {
         assertThat(AccessRule.class, is(protectedConstructor()));
 
         final User user = new User("userName", null);
-        assertThat(new AccessRule(user, READ_WRITE, false).getUser(), is(sameInstance(user)));
-        assertThat(new AccessRule(user, READ_WRITE, false).getUserGroup(), is(nullValue()));
-        assertThat(new AccessRule(user, READ_WRITE, false).getAccessLevel(), is(equalTo(READ_WRITE)));
-        assertThat(new AccessRule(user, READ_WRITE, false).isExclusion(), is(false));
+        assertThat(new AccessRule(new TreeNode(), user, READ_WRITE, false).getUser(), is(sameInstance(user)));
+        assertThat(new AccessRule(new TreeNode(), user, READ_WRITE, false).getUserGroup(), is(nullValue()));
+        assertThat(new AccessRule(new TreeNode(), user, READ_WRITE, false).getAccessLevel(), is(equalTo(READ_WRITE)));
+        assertThat(new AccessRule(new TreeNode(), user, READ_WRITE, false).isExclusion(), is(false));
 
         final UserGroup userGroup = new UserGroup("userGroupName");
-        assertThat(new AccessRule(userGroup, READ_WRITE, false).getUser(), is(nullValue()));
-        assertThat(new AccessRule(userGroup, READ_WRITE, false).getUserGroup(), is(sameInstance(userGroup)));
-        assertThat(new AccessRule(userGroup, READ_WRITE, false).getAccessLevel(), is(equalTo(READ_WRITE)));
-        assertThat(new AccessRule(userGroup, READ_WRITE, false).isExclusion(), is(false));
+        assertThat(new AccessRule(new TreeNode(), userGroup, READ_WRITE, false).getUser(), is(nullValue()));
+        assertThat(new AccessRule(new TreeNode(), userGroup, READ_WRITE, false).getUserGroup(), is(sameInstance(userGroup)));
+        assertThat(new AccessRule(new TreeNode(), userGroup, READ_WRITE, false).getAccessLevel(), is(equalTo(READ_WRITE)));
+        assertThat(new AccessRule(new TreeNode(), userGroup, READ_WRITE, false).isExclusion(), is(false));
+    }
+
+    @Test
+    public void testGetTreeNode() {
+        final TreeNode treeNode = new TreeNode();
+
+        final User user = new User("userName", null);
+        assertThat(new AccessRule(treeNode, user, READ_WRITE, false).getTreeNode(), is(notNullValue()));
+        assertThat(new AccessRule(treeNode, user, READ_WRITE, false).getTreeNode(), is(sameInstance(treeNode)));
+
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        assertThat(new AccessRule(treeNode, userGroup, READ_WRITE, false).getTreeNode(), is(notNullValue()));
+        assertThat(new AccessRule(treeNode, userGroup, READ_WRITE, false).getTreeNode(), is(sameInstance(treeNode)));
     }
 
     @Test
     public void testSetAccessLevel() {
         assertThat(AccessRule.class, is(protectedMethod("setAccessLevel")));
 
-        final AccessRule accessRule = new AccessRule(new User("userName", null), READ_WRITE, false);
+        final AccessRule accessRule = new AccessRule(new TreeNode(), new User("userName", null), READ_WRITE, false);
         assertThat(accessRule.getAccessLevel(), is(equalTo(READ_WRITE)));
 
         accessRule.setAccessLevel(READ_ONLY);
@@ -43,7 +56,7 @@ public final class AccessRuleTest {
     public void testSetExclusion() {
         assertThat(AccessRule.class, is(protectedMethod("setExclusion")));
 
-        final AccessRule accessRule = new AccessRule(new User("userName", null), READ_WRITE, false);
+        final AccessRule accessRule = new AccessRule(new TreeNode(), new User("userName", null), READ_WRITE, false);
         assertThat(accessRule.isExclusion(), is(false));
 
         accessRule.setExclusion(true);

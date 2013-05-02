@@ -55,41 +55,71 @@ public final class TreeNode {
     /**
      * Adds an access rule to this tree at the specified path.
      *
-     * @param path        Path to which the new rule applies
+     * @param rootTreeNode Root tree node from which to search for the specified path
+     * @param path         Path to which the new rule applies
+     * @param user         User to which this rule applies
+     * @param accessLevel  Level of access to apply
+     * @param exclusion    Indicates if this rule applies to all users that are not the provided user
+     * @return true if the access rule is added, otherwise false
+     * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
+     */
+    protected static boolean addAccessRuleForUser(final TreeNode rootTreeNode, final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
+        checkThatAccessRuleForUserDoesNotExist(rootTreeNode, path, user);
+
+        return buildTree(path, rootTreeNode).addAccessRuleForUser(user, accessLevel, exclusion);
+    }
+
+    /**
+     * Adds an access rule to this tree node.
+     *
      * @param user        User to which this rule applies
      * @param accessLevel Level of access to apply
      * @param exclusion   Indicates if this rule applies to all users that are not the provided user
      * @return true if the access rule is added, otherwise false
      * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
      */
-    protected boolean addAccessRuleForUser(final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
-        checkArgumentPathValid(path, "Path");
+    protected boolean addAccessRuleForUser(final User user, final AccessLevel accessLevel, final boolean exclusion) {
         checkArgumentNotNull(user, "User");
         checkArgumentNotNull(accessLevel, "Access level");
-        checkThatAccessRuleForUserDoesNotExist(this, path, user);
+        checkThatAccessRuleForUserDoesNotExist(this, "/", user);
 
-        final AccessRule accessRule = new AccessRule(user, accessLevel, exclusion);
-        return buildTree(path, this).accessRules.add(accessRule) && user.addAccessRule(accessRule);
+        final AccessRule accessRule = new AccessRule(this, user, accessLevel, exclusion);
+        return accessRules.add(accessRule) && user.addAccessRule(accessRule);
     }
 
     /**
      * Adds an access rule to this tree at the specified path.
      *
-     * @param path        Path to which the new rule applies
+     * @param rootTreeNode Root tree node from which to search for the specified path
+     * @param path         Path to which the new rule applies
+     * @param userGroup    User group to which this rule applies
+     * @param accessLevel  Level of access to apply
+     * @param exclusion    Indicates if this rule applies to all users that are not in the provided user group
+     * @return true if the access rule is added, otherwise false
+     * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
+     */
+    protected static boolean addAccessRuleForUserGroup(final TreeNode rootTreeNode, final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
+        checkThatAccessRuleForUserGroupDoesNotExist(rootTreeNode, path, userGroup);
+
+        return buildTree(path, rootTreeNode).addAccessRuleForUserGroup(userGroup, accessLevel, exclusion);
+    }
+
+    /**
+     * Adds an access rule to this tree node.
+     *
      * @param userGroup   User group to which this rule applies
      * @param accessLevel Level of access to apply
      * @param exclusion   Indicates if this rule applies to all users that are not in the provided user group
      * @return true if the access rule is added, otherwise false
-     * @throws EntityAlreadyExistsException When access rule already exists at this path for this user group
+     * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
      */
-    protected boolean addAccessRuleForUserGroup(final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
-        checkArgumentPathValid(path, "Path");
+    protected boolean addAccessRuleForUserGroup(final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
         checkArgumentNotNull(userGroup, "User group");
         checkArgumentNotNull(accessLevel, "Access level");
-        checkThatAccessRuleForUserGroupDoesNotExist(this, path, userGroup);
+        checkThatAccessRuleForUserGroupDoesNotExist(this, "/", userGroup);
 
-        final AccessRule accessRule = new AccessRule(userGroup, accessLevel, exclusion);
-        return buildTree(path, this).accessRules.add(accessRule) && userGroup.addAccessRule(accessRule);
+        final AccessRule accessRule = new AccessRule(this, userGroup, accessLevel, exclusion);
+        return accessRules.add(accessRule) && userGroup.addAccessRule(accessRule);
     }
 
     /**
@@ -171,7 +201,7 @@ public final class TreeNode {
     /**
      * Finds an access rule for the specified user group at the provided path.
      *
-     * @param path Path of tree node to find
+     * @param path      Path of tree node to find
      * @param userGroup User group that is used to find a matching access rule
      * @return Access that applies to the specified user group
      */
@@ -242,6 +272,8 @@ public final class TreeNode {
      * @return New/Existing tree containing all nodes in the provided path
      */
     protected static TreeNode buildTree(final String path, final TreeNode treeNode) {
+        checkArgumentPathValid(path, "Path");
+
         return buildTreeRecursively(splitPath(path), treeNode);
     }
 

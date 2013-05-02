@@ -26,7 +26,7 @@ public final class TreeNodeTest {
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(user.getAccessRules(), is(emptySet()));
 
-        treeNode.addAccessRuleForUser("/", user, READ_WRITE, false);
+        TreeNode.addAccessRuleForUser(treeNode, "/", user, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(not(emptySet())));
         assertThat(user.getAccessRules(), is(not(emptySet())));
 
@@ -44,7 +44,7 @@ public final class TreeNodeTest {
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(user.getAccessRules(), is(emptySet()));
 
-        treeNode.addAccessRuleForUser("foo/bar", user, READ_WRITE, false);
+        TreeNode.addAccessRuleForUser(treeNode, "foo/bar", user, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(user.getAccessRules(), is(not(emptySet())));
 
@@ -68,7 +68,7 @@ public final class TreeNodeTest {
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(userGroup.getAccessRules(), is(emptySet()));
 
-        treeNode.addAccessRuleForUserGroup("/", userGroup, READ_WRITE, false);
+        TreeNode.addAccessRuleForUserGroup(treeNode, "/", userGroup, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(not(emptySet())));
         assertThat(userGroup.getAccessRules(), is(not(emptySet())));
 
@@ -86,7 +86,7 @@ public final class TreeNodeTest {
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(userGroup.getAccessRules(), is(emptySet()));
 
-        treeNode.addAccessRuleForUserGroup("foo/bar", userGroup, READ_WRITE, false);
+        TreeNode.addAccessRuleForUserGroup(treeNode, "foo/bar", userGroup, READ_WRITE, false);
         assertThat(treeNode.getAccessRules(), is(emptySet()));
         assertThat(userGroup.getAccessRules(), is(not(emptySet())));
 
@@ -113,7 +113,7 @@ public final class TreeNodeTest {
         assertThat(rootNode.findAccessRuleForUser(otherUser), is(nullValue()));
 
         // Test
-        rootNode.addAccessRuleForUser("/", user, READ_WRITE, false);
+        TreeNode.addAccessRuleForUser(rootNode, "/", user, READ_WRITE, false);
         assertThat(rootNode.findAccessRuleForUser(user), is(notNullValue()));
         assertThat(rootNode.findAccessRuleForUser(user).getUser(), is(sameInstance(user)));
         assertThat(rootNode.findAccessRuleForUser(otherUser), is(nullValue()));
@@ -131,7 +131,7 @@ public final class TreeNodeTest {
         assertThat(rootNode.findAccessRuleForUserAtPath("foo/bar", user), is(nullValue()));
 
         // Test
-        rootNode.addAccessRuleForUser("foo/bar", user, READ_WRITE, false);
+        TreeNode.addAccessRuleForUser(rootNode, "foo/bar", user, READ_WRITE, false);
         assertThat(rootNode.findAccessRuleForUserAtPath("foo/bar", user), is(notNullValue()));
         assertThat(rootNode.findAccessRuleForUserAtPath("foo/bar", user).getUser(), is(sameInstance(user)));
 
@@ -149,7 +149,7 @@ public final class TreeNodeTest {
         assertThat(rootNode.findAccessRuleForUserGroup(otherUserGroup), is(nullValue()));
 
         // Test
-        rootNode.addAccessRuleForUserGroup("/", userGroup, READ_WRITE, false);
+        TreeNode.addAccessRuleForUserGroup(rootNode, "/", userGroup, READ_WRITE, false);
         assertThat(rootNode.findAccessRuleForUserGroup(userGroup), is(notNullValue()));
         assertThat(rootNode.findAccessRuleForUserGroup(userGroup).getUserGroup(), is(sameInstance(userGroup)));
         assertThat(rootNode.findAccessRuleForUserGroup(otherUserGroup), is(nullValue()));
@@ -167,7 +167,7 @@ public final class TreeNodeTest {
         assertThat(rootNode.findAccessRuleForUserGroupAtPath("foo/bar", userGroup), is(nullValue()));
 
         // Test
-        rootNode.addAccessRuleForUserGroup("foo/bar", userGroup, READ_WRITE, false);
+        TreeNode.addAccessRuleForUserGroup(rootNode, "foo/bar", userGroup, READ_WRITE, false);
         assertThat(rootNode.findAccessRuleForUserGroupAtPath("foo/bar", userGroup), is(notNullValue()));
         assertThat(rootNode.findAccessRuleForUserGroupAtPath("foo/bar", userGroup).getUserGroup(), is(sameInstance(userGroup)));
 

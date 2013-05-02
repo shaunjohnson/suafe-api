@@ -25,13 +25,20 @@ public final class AccessRule {
     private AccessLevel accessLevel;
 
     /**
+     * Tree node where the access rule resides.
+     */
+    private final TreeNode treeNode;
+
+    /**
      * Constructs an access rule for a user.
      *
+     * @param treeNode Tree node where this access rule resides
      * @param user        User to which the rule applies
      * @param accessLevel Level of access to apply to the user
      * @param exclusion   Indicates that the rule applies to all users that is not this user
      */
-    protected AccessRule(final User user, final AccessLevel accessLevel, boolean exclusion) {
+    protected AccessRule(final TreeNode treeNode, final User user, final AccessLevel accessLevel, boolean exclusion) {
+        this.treeNode = treeNode;
         this.user = user;
         this.userGroup = null;
         this.accessLevel = accessLevel;
@@ -41,11 +48,13 @@ public final class AccessRule {
     /**
      * Constructs an access rule for a user group.
      *
+     * @param treeNode Tree node where this access rule resides
      * @param userGroup   User group to which the rule applies
      * @param accessLevel Level of access to apply to the user group
      * @param exclusion   Indicates that the rule applies to all users that are not in this user group
      */
-    protected AccessRule(final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
+    protected AccessRule(final TreeNode treeNode, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
+        this.treeNode = treeNode;
         this.user = null;
         this.userGroup = userGroup;
         this.accessLevel = accessLevel;
@@ -104,5 +113,14 @@ public final class AccessRule {
      */
     protected void setAccessLevel(final AccessLevel accessLevel) {
         this.accessLevel = accessLevel;
+    }
+
+    /**
+     * Gets the tree node where this access rule resides.
+     *
+     * @return Owning tree node
+     */
+    public TreeNode getTreeNode() {
+        return treeNode;
     }
 }

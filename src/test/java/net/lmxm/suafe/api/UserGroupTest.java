@@ -36,7 +36,7 @@ public final class UserGroupTest {
 
         // Setup
         final UserGroup userGroup = new UserGroup("userGroupName");
-        final AccessRule accessRule = new AccessRule(userGroup, READ_WRITE, false);
+        final AccessRule accessRule = new AccessRule(new TreeNode(), userGroup, READ_WRITE, false);
         assertThat(userGroup.getAccessRules(), is(emptySet()));
 
         // Test
@@ -50,7 +50,7 @@ public final class UserGroupTest {
     public void testGetAccessRules() {
         // Setup
         final UserGroup userGroup = new UserGroup("userGroupName");
-        final AccessRule accessRule = new AccessRule(userGroup, READ_WRITE, false);
+        final AccessRule accessRule = new AccessRule(new TreeNode(), userGroup, READ_WRITE, false);
         assertThat(userGroup.getAccessRules(), is(emptySet()));
 
         // Test
@@ -69,7 +69,7 @@ public final class UserGroupTest {
 
         // Setup
         final UserGroup userGroup = new UserGroup("userGroupName");
-        final AccessRule accessRule = new AccessRule(userGroup, READ_WRITE, false);
+        final AccessRule accessRule = new AccessRule(new TreeNode(), userGroup, READ_WRITE, false);
         assertThat(userGroup.getAccessRules(), is(emptySet()));
         assertThat(userGroup.addAccessRule(accessRule), is(true));
         assertThat(userGroup.getAccessRules(), is(not(emptySet())));

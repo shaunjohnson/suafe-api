@@ -63,7 +63,7 @@ public final class Repository {
      * @return True if the access rule is added, otherwise false
      */
     protected boolean addAccessRuleForUser(final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
-        return rootTreeNode.addAccessRuleForUser(path, user, accessLevel, exclusion);
+        return TreeNode.addAccessRuleForUser(rootTreeNode, path, user, accessLevel, exclusion);
     }
 
     /**
@@ -76,7 +76,7 @@ public final class Repository {
      * @return True if the access rule is added, otherwise false
      */
     protected boolean addAccessRuleForUserGroup(final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
-        return rootTreeNode.addAccessRuleForUserGroup(path, userGroup, accessLevel, exclusion);
+        return TreeNode.addAccessRuleForUserGroup(rootTreeNode, path, userGroup, accessLevel, exclusion);
     }
 
     @Override

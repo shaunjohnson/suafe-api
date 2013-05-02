@@ -42,7 +42,7 @@ public final class Document {
         final User user = checkThatUserWithNameExists(this, userName);
 
         if (repository == null) {
-            return rootTreeNode.addAccessRuleForUser(path, user, accessLevel, exclusion);
+            return TreeNode.addAccessRuleForUser(rootTreeNode, path, user, accessLevel, exclusion);
         }
         else {
             return repository.addAccessRuleForUser(path, user, accessLevel, exclusion);
@@ -63,7 +63,7 @@ public final class Document {
         final UserGroup userGroup = checkThatUserGroupWithNameExists(this, userGroupName);
 
         if (isBlank(repositoryName)) {
-            return rootTreeNode.addAccessRuleForUserGroup(path, userGroup, accessLevel, exclusion);
+            return TreeNode.addAccessRuleForUserGroup(rootTreeNode, path, userGroup, accessLevel, exclusion);
         }
         else {
             final Repository repository = checkThatRepositoryExists(this, repositoryName);

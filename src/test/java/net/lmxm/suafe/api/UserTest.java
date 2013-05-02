@@ -38,7 +38,7 @@ public final class UserTest {
 
         // Setup
         final User user = new User("userName", null);
-        final AccessRule accessRule = new AccessRule(user, READ_WRITE, false);
+        final AccessRule accessRule = new AccessRule(new TreeNode(), user, READ_WRITE, false);
         assertThat(user.getAccessRules(), is(emptySet()));
 
         // Test
@@ -52,7 +52,7 @@ public final class UserTest {
     public void testGetAccessRules() {
         // Setup
         final User user = new User("userName", null);
-        final AccessRule accessRule = new AccessRule(user, READ_WRITE, false);
+        final AccessRule accessRule = new AccessRule(new TreeNode(), user, READ_WRITE, false);
         assertThat(user.getAccessRules(), is(emptySet()));
 
         // Test
@@ -71,7 +71,7 @@ public final class UserTest {
 
         // Setup
         final User user = new User("userName", null);
-        final AccessRule accessRule = new AccessRule(user, READ_WRITE, false);
+        final AccessRule accessRule = new AccessRule(new TreeNode(), user, READ_WRITE, false);
         assertThat(user.getAccessRules(), is(emptySet()));
         assertThat(user.addAccessRule(accessRule), is(true));
         assertThat(user.getAccessRules(), is(not(emptySet())));
