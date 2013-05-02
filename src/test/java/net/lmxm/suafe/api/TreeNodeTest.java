@@ -6,6 +6,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.LinkedList;
 
+import static net.lmxm.suafe.api.AccessLevel.READ_ONLY;
 import static net.lmxm.suafe.api.TreeNode.*;
 import static net.lmxm.suafe.api.AccessLevel.READ_WRITE;
 import static net.lmxm.suafe.api.CustomMatchers.*;
@@ -205,6 +206,58 @@ public final class TreeNodeTest {
         deleteAccessRuleForUserGroup(treeNode, "foo/bar", userGroup);
         assertThat(foobarTreeNode.getAccessRules(), is(emptySet()));
         assertThat(userGroup.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
+    public void testDeleteAllAccessRules() {
+        final TreeNode treeNode = new TreeNode();
+        final User user = new User("userName", null);
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        final AccessRule userAccessRule = treeNode.createAccessRuleForUser(user, READ_ONLY, false);
+        final AccessRule userGroupAccessRule = treeNode.createAccessRuleForUserGroup(userGroup, READ_ONLY, false);
+
+        // Setup
+        assertThat(treeNode.getAccessRules(), is(not(emptySet())));
+        assertThat(treeNode.getAccessRules(), containsSameInstance(userAccessRule));
+        assertThat(treeNode.getAccessRules(), containsSameInstance(userGroupAccessRule));
+        assertThat(userAccessRule.getTreeNode(), is(equalTo(treeNode)));
+        assertThat(userGroupAccessRule.getTreeNode(), is(equalTo(treeNode)));
+
+        // Test
+        treeNode.deleteAllAccessRules();
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
+    public void testExtractUsersFromAccessRules() {
+        final TreeNode treeNode = new TreeNode();
+        final User user = new User("userName", null);
+        final UserGroup userGroup = new UserGroup("userGroupName");
+
+        // Setup
+        treeNode.createAccessRuleForUser(user, READ_ONLY, false);
+        treeNode.createAccessRuleForUserGroup(userGroup, READ_ONLY, false);
+        assertThat(treeNode.getAccessRules(), is(not(emptySet())));
+
+        // Test
+        assertThat(treeNode.extractUsersFromAccessRules(), is(not(emptySet())));
+        assertThat(treeNode.extractUsersFromAccessRules(), containsSameInstance(user));
+    }
+
+    @Test
+    public void testExtractUserGroupsFromAccessRules() {
+        final TreeNode treeNode = new TreeNode();
+        final User user = new User("userName", null);
+        final UserGroup userGroup = new UserGroup("userGroupName");
+
+        // Setup
+        treeNode.createAccessRuleForUser(user, READ_ONLY, false);
+        treeNode.createAccessRuleForUserGroup(userGroup, READ_ONLY, false);
+        assertThat(treeNode.getAccessRules(), is(not(emptySet())));
+
+        // Test
+        assertThat(treeNode.extractUserGroupsFromAccessRules(), is(not(emptySet())));
+        assertThat(treeNode.extractUserGroupsFromAccessRules(), containsSameInstance(userGroup));
     }
 
     @Test

@@ -123,6 +123,53 @@ public final class TreeNode {
     }
 
     /**
+     * Deletes all existing access rules for a tree node.
+     */
+    protected void deleteAllAccessRules() {
+        for (final User user : extractUsersFromAccessRules()) {
+            deleteAccessRuleForUser(user);
+        }
+
+        for (final UserGroup userGroup : extractUserGroupsFromAccessRules()) {
+            deleteAccessRuleForUserGroup(userGroup);
+        }
+    }
+
+    /**
+     * Extracts a set of all users that are referenced in access rules for this node.
+     *
+     * @return Set of user objects
+     */
+    protected Set<User> extractUsersFromAccessRules() {
+        final Set<User> users = new HashSet<User>();
+
+        for (final AccessRule accessRule : accessRules) {
+            if (accessRule.getUser() != null) {
+                users.add(accessRule.getUser());
+            }
+        }
+
+        return users;
+    }
+
+    /**
+     * Extracts a set of all user groups that are referenced in access rules for this node.
+     *
+     * @return Set of user group objects
+     */
+    protected Set<UserGroup> extractUserGroupsFromAccessRules() {
+        final Set<UserGroup> userGroups = new HashSet<UserGroup>();
+
+        for (final AccessRule accessRule : accessRules) {
+            if (accessRule.getUserGroup() != null) {
+                userGroups.add(accessRule.getUserGroup());
+            }
+        }
+
+        return userGroups;
+    }
+
+    /**
      * Finds an access rule for the specified user.
      *
      * @param user User that is used to find a matching access rule
