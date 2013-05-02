@@ -14,6 +14,10 @@ public final class Preconditions {
     private static final Pattern VALID_PATH_PATTERN = Pattern.compile("^(/)|([^/=]+(/[^/=]+)*)$");
 
     /**
+     * Regular expression pattern representing a valid user alias.
+     */
+    private static final Pattern VALID_USER_ALIAS_PATTERN = Pattern.compile("^[^=]+$");
+    /**
      * Regular expression pattern representing a valid user name.
      */
     private static final Pattern VALID_USER_NAME_PATTERN = Pattern.compile("^[^=]+$");
@@ -242,6 +246,25 @@ public final class Preconditions {
         }
 
         return userGroup;
+    }
+
+    /**
+     * Checks if the provided user alias is valid.
+     *
+     * @param userAlias User alias to validate
+     * @return Validated user alias
+     * @throws InvalidEntityNameException When user alias is deemed invalid
+     */
+    public static String checkUserAlias(final String userAlias) {
+        if (isBlank(userAlias)) {
+            throw new InvalidEntityNameException(MessageKey.userAliasIsBlank, userAlias);
+        }
+
+        if (!VALID_USER_ALIAS_PATTERN.matcher(userAlias).matches()) {
+            throw new InvalidEntityNameException(MessageKey.userAliasIsInvalid, userAlias);
+        }
+
+        return userAlias;
     }
 
     /**

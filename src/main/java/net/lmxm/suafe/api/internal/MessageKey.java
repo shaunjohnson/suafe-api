@@ -15,6 +15,8 @@ public enum MessageKey {
     userWithAliasAlreadyExists,
     userWithNameAlreadyExists,
     userWithNameDoesNotExist,
+    userAliasIsBlank,
+    userAliasIsInvalid,
     userNameIsBlank,
     userNameIsInvalid
 }

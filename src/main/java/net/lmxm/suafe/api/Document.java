@@ -372,7 +372,7 @@ public final class Document {
      * @return Matching user or null if not found
      */
     public User findUserByAlias(final String userAlias) {
-        checkArgumentNotBlank(userAlias, "User alias");
+        checkUserAlias(userAlias);
 
         for (final User user : users) {
             if (user.getAlias() != null && user.getAlias().equals(userAlias)) {

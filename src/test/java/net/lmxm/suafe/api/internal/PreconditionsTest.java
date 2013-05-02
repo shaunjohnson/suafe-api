@@ -325,6 +325,44 @@ public final class PreconditionsTest {
     }
 
     @Test
+    public void testCheckUserAliasNullValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("alias"));
+        checkUserAlias(null);
+    }
+
+    @Test
+    public void testCheckUserAliasEmptyValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("alias"));
+        checkUserAlias("");
+    }
+
+    @Test
+    public void testCheckUserAliasBlankValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("null/blank"));
+        thrown.expectMessage(containsString("alias"));
+        checkUserAlias("    ");
+    }
+
+    @Test
+    public void testCheckUserAliasInvalidValues() {
+        thrown.expect(InvalidEntityNameException.class);
+        thrown.expectMessage(containsString("invalid"));
+        thrown.expectMessage(containsString("alias"));
+        checkUserAlias("abc=abc");
+    }
+
+    @Test
+    public void testCheckUserAliasValidValues() {
+        checkUserAlias("abcd");
+        checkUserAlias("a123");
+    }
+
+    @Test
     public void testCheckUserNameNullValues() {
         thrown.expect(InvalidEntityNameException.class);
         thrown.expectMessage(containsString("null/blank"));
