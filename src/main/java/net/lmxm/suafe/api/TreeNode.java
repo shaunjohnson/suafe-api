@@ -211,15 +211,15 @@ public final class TreeNode {
     }
 
     /**
-     * Creates an access rule to this tree at the specified path.
+     * Creates an access rule to the provided tree at the specified path.
      *
      * @param rootTreeNode Root tree node from which to search for the specified path
      * @param path         Path to which the new rule applies
-     * @param user         User to which this rule applies
+     * @param user         User to which the rule applies
      * @param accessLevel  Level of access to apply
      * @param exclusion    Indicates if this rule applies to all users that are not the provided user
      * @return true if the access rule is added, otherwise false
-     * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
+     * @throws EntityAlreadyExistsException When access rule already exists at this path for this user
      */
     protected static boolean createAccessRuleForUser(final TreeNode rootTreeNode, final String path, final User user, final AccessLevel accessLevel, final boolean exclusion) {
         checkThatAccessRuleForUserDoesNotExist(rootTreeNode, path, user);
@@ -228,20 +228,50 @@ public final class TreeNode {
     }
 
     /**
-     * Creates an access rule to this tree at the specified path.
+     * Deletes an existing access rule for a user from the provided tree at the specified path.
+     *
+     * @param rootTreeNode Root tree node from which to search for the specified path
+     * @param path         Path to which the rule applies
+     * @param user         User to which the rule applies
+     * @return true if the access rule is deleted, otherwise false
+     * @throws EntityDoesNotExistException When access rule does not exist at this path for this user
+     */
+    protected static boolean deleteAccessRuleForUser(final TreeNode rootTreeNode, final String path, final User user) {
+        checkThatAccessRuleForUserExists(rootTreeNode, path, user);
+
+        return buildTree(path, rootTreeNode).deleteAccessRuleForUser(user);
+    }
+
+    /**
+     * Creates an access rule to the provided tree at the specified path.
      *
      * @param rootTreeNode Root tree node from which to search for the specified path
      * @param path         Path to which the new rule applies
-     * @param userGroup    User group to which this rule applies
+     * @param userGroup    User group to which the rule applies
      * @param accessLevel  Level of access to apply
      * @param exclusion    Indicates if this rule applies to all users that are not in the provided user group
      * @return true if the access rule is added, otherwise false
-     * @throws EntityAlreadyExistsException When access rule already exists at this path for this year
+     * @throws EntityAlreadyExistsException When access rule already exists at this path for this user
      */
     protected static boolean createAccessRuleForUserGroup(final TreeNode rootTreeNode, final String path, final UserGroup userGroup, final AccessLevel accessLevel, final boolean exclusion) {
         checkThatAccessRuleForUserGroupDoesNotExist(rootTreeNode, path, userGroup);
 
         return buildTree(path, rootTreeNode).createAccessRuleForUserGroup(userGroup, accessLevel, exclusion);
+    }
+
+    /**
+     * Deletes an existing access rule for a user group from the provided tree at the specified path.
+     *
+     * @param rootTreeNode Root tree node from which to search for the specified path
+     * @param path         Path to which the rule applies
+     * @param userGroup    User group to which the rule applies
+     * @return true if the access rule is deleted, otherwise false
+     * @throws EntityDoesNotExistException When access rule does not exist at this path for this user group
+     */
+    protected static boolean deleteAccessRuleForUserGroup(final TreeNode rootTreeNode, final String path, final UserGroup userGroup) {
+        checkThatAccessRuleForUserGroupExists(rootTreeNode, path, userGroup);
+
+        return buildTree(path, rootTreeNode).deleteAccessRuleForUserGroup(userGroup);
     }
 
     /**

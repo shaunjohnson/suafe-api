@@ -156,6 +156,23 @@ public final class TreeNodeTest {
     }
 
     @Test
+    public void testDeleteAccessRuleForUserAtPath() {
+        final TreeNode treeNode = new TreeNode();
+        final User user = new User("userName", null);
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+
+        createAccessRuleForUser(treeNode, "foo/bar", user, READ_WRITE, false);
+        final TreeNode foobarTreeNode = findByPath(treeNode, "foo/bar");
+        assertThat(foobarTreeNode.getAccessRules(), is(not(emptySet())));
+        assertThat(user.getAccessRules(), is(not(emptySet())));
+
+        deleteAccessRuleForUser(treeNode, "foo/bar", user);
+        assertThat(foobarTreeNode.getAccessRules(), is(emptySet()));
+        assertThat(user.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
     public void testDeleteAccessRuleForUserGroup() {
         final TreeNode treeNode = new TreeNode();
         final UserGroup userGroup = new UserGroup("userGroupName");
@@ -168,6 +185,23 @@ public final class TreeNodeTest {
 
         treeNode.deleteAccessRuleForUserGroup(userGroup);
         assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+    }
+
+    @Test
+    public void testDeleteAccessRuleForUserGroupAtPath() {
+        final TreeNode treeNode = new TreeNode();
+        final UserGroup userGroup = new UserGroup("userGroupName");
+        assertThat(treeNode.getAccessRules(), is(emptySet()));
+        assertThat(userGroup.getAccessRules(), is(emptySet()));
+
+        createAccessRuleForUserGroup(treeNode, "foo/bar", userGroup, READ_WRITE, false);
+        final TreeNode foobarTreeNode = findByPath(treeNode, "foo/bar");
+        assertThat(foobarTreeNode.getAccessRules(), is(not(emptySet())));
+        assertThat(userGroup.getAccessRules(), is(not(emptySet())));
+
+        deleteAccessRuleForUserGroup(treeNode, "foo/bar", userGroup);
+        assertThat(foobarTreeNode.getAccessRules(), is(emptySet()));
         assertThat(userGroup.getAccessRules(), is(emptySet()));
     }
 
